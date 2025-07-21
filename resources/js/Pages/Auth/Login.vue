@@ -53,7 +53,16 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <div class="flex justify-between items-center">
+                    <InputLabel for="password" value="Password" />
+                    <Link
+                        v-if="canResetPassword"
+                        :href="route('password.request')"
+                        class="text-sm text-gray-600 focus:outline-none dark:text-white border-b dark:border-b-gray-600 dark:hover:border-b-gray-100"
+                    >
+                        Forgot your password?
+                    </Link>
+                </div>
 
                 <TextInput
                     id="password"
@@ -76,22 +85,21 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                >
-                    Forgot your password?
-                </Link>
-
+            <div class="mt-4 flex items-center flex-col space-y-4">
                 <PrimaryButton
-                    class="ms-4"
+                    class="w-full"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Log in
                 </PrimaryButton>
+                <div class="flex justify-center items-center">
+                    <p class="text-sm text-gray-600  focus:outline-none dark:text-gray-400">Don't have an account?
+                        <Link :href="route('register')" class="text-white border-b border-b-gray-600 hover:border-b-gray-100">
+                            Signup
+                        </Link>
+                    </p>
+                </div>
             </div>
         </form>
     </GuestLayout>

@@ -79,7 +79,7 @@ const toggleDarkMode = () => {
                                 </template>
 
                                 <template #content>
-                                    <DropdownLink :href="route('profile.edit', {username: authUser.username })">
+                                    <DropdownLink :href="route('profile.show', {username: authUser.username })">
                                         Profile
                                     </DropdownLink>
                                     <DropdownLink :href="route('logout')" method="post" as="button">
@@ -145,7 +145,7 @@ const toggleDarkMode = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit', {username: authUser.username })"> Profile
+                            <ResponsiveNavLink :href="route('profile.show', {username: authUser.username })"> Profile
                             </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Log Out

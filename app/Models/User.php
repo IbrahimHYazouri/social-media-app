@@ -5,16 +5,31 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-final class User extends Authenticatable
+/**
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read string $email
+ * @property-read DateTimeInterface|null $email_verified_at
+ * @property-read string $username
+ * @property-read string $password
+ * @property-read string $remember_token
+ * @property-read DateTimeInterface $created_at
+ * @property-read DateTimeInterface $updated_at
+ */
+final class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasSlug, Notifiable;
+    use HasFactory, HasSlug, InteractsWithMedia, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,8 +41,6 @@ final class User extends Authenticatable
         'username',
         'email',
         'password',
-        'cover_path',
-        'avatar_path',
     ];
 
     /**
@@ -46,6 +59,44 @@ final class User extends Authenticatable
             ->generateSlugsFrom('name')
             ->saveSlugsTo('username')
             ->doNotGenerateSlugsOnUpdate();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
+        $this
+            ->addMediaCollection('cover')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('thumb')
+            ->width(100)
+            ->height(100)
+            ->sharpen(10);
+    }
+
+    /**
+     * Get avatar thumbnail URL
+     */
+    public function getAvatarThumbUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('avatar', 'thumb');
+    }
+
+    /**
+     * Get cover URL
+     */
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('cover');
     }
 
     /**

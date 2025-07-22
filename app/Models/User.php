@@ -88,7 +88,8 @@ final class User extends Authenticatable implements HasMedia
      */
     public function getAvatarThumbUrlAttribute(): ?string
     {
-        return $this->getFirstMediaUrl('avatar', 'thumb');
+        $media = $this->getFirstMedia('avatar');
+        return $media ? $media->getFullUrl('thumb') : null;
     }
 
     /**

@@ -77,7 +77,7 @@ const submit = () => {
         <div class="max-w-[768px] mx-auto h-full overflow-auto">
             <div class="px-4">
                 <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
-                    <img :src="coverImageSrc || user.cover_path || '/img/default_cover.jpg'"
+                    <img :src="coverImageSrc || user.cover_url || '/img/default_cover.jpg'"
                          :alt="user.username"
                          class="w-full h-[200px] object-cover">
                     <div v-if="isMyProfile" class="absolute top-2 right-2">
@@ -111,7 +111,7 @@ const submit = () => {
                     </div>
                     <div class="flex">
                         <div class="flex items-center justify-center relative group/avatar -mt-[64px] ml-[48px] w-[128px] h-[128px] rounded-full">
-                            <img :src="avatarImageSrc || user.avatar_path || '/img/default_avatar.webp'"
+                            <img :src="avatarImageSrc || user.avatar_url || '/img/default_avatar.webp'"
                                  :alt="user.username"
                                  class="w-full h-full object-cover rounded-full">
                             <div v-if="isMyProfile">

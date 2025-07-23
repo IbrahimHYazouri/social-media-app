@@ -74,22 +74,12 @@ final class User extends Authenticatable implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this
-            ->addMediaConversion('thumb')
-            ->width(100)
-            ->height(100)
-            ->sharpen(10);
-    }
-
     /**
      * Get avatar thumbnail URL
      */
     public function getAvatarThumbUrlAttribute(): ?string
     {
-        $media = $this->getFirstMedia('avatar');
-        return $media ? $media->getFullUrl('thumb') : null;
+        return $this->getFirstMediaUrl('avatar');
     }
 
     /**

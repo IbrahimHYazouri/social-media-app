@@ -53,13 +53,13 @@ final class ProfileController extends Controller
         if ($request->hasFile('avatar_path')) {
             $user
                 ->addMediaFromRequest('avatar_path')
-                ->toMediaCollection('avatar');
+                ->toMediaCollection('avatar', 'public');
         }
 
         if ($request->hasFile('cover_path')) {
             $user
                 ->addMediaFromRequest('cover_path')
-                ->toMediaCollection('cover');
+                ->toMediaCollection('cover', 'public');
         }
 
         return redirect()->route('profile.show', ['user' => $user]);

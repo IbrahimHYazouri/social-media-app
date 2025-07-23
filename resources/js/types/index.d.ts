@@ -7,8 +7,8 @@ export interface User {
     email: string;
     email_verified_at?: string;
     password ?: string;
-    cover_path ?: string;
-    avatar_path ?: string;
+    cover_url ?: string;
+    avatar_url ?: string;
 }
 
 export type PageProps<

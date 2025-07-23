@@ -6,6 +6,7 @@ import {XMarkIcon, CheckCircleIcon, CameraIcon} from '@heroicons/vue/24/solid'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Components/TabItem.vue";
 import {computed, ref} from "vue";
+import Edit from "@/Pages/Profile/Edit.vue";
 
 const props = defineProps<{
     user: User
@@ -62,7 +63,7 @@ const reset = () => {
 }
 
 const submit = () => {
-    form.post(route('profile.update', props.user.id), {
+    form.post(route('profile.images.update', props.user.id), {
         onSuccess: () => {
             reset()
         }
@@ -160,6 +161,9 @@ const submit = () => {
                             <Tab v-slot="{ selected }" as="template">
                                 <TabItem text="Photos" :selected="selected"/>
                             </Tab>
+                            <Tab v-if="isMyProfile" v-slot="{ selected }" as="template">
+                                <TabItem text="My Profile" :selected="selected"/>
+                            </Tab>
                         </TabList>
                         <TabPanels class="mt-2">
                             <TabPanel>
@@ -181,6 +185,9 @@ const submit = () => {
                                 <div>
                                     Photos
                                 </div>
+                            </TabPanel>
+                            <TabPanel>
+                                <Edit />
                             </TabPanel>
                         </TabPanels>
                     </TabGroup>

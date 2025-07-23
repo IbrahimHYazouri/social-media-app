@@ -50,18 +50,6 @@ final class ProfileController extends Controller
 
         $user->save();
 
-        if ($request->hasFile('avatar_path')) {
-            $user
-                ->addMediaFromRequest('avatar_path')
-                ->toMediaCollection('avatar', 'public');
-        }
-
-        if ($request->hasFile('cover_path')) {
-            $user
-                ->addMediaFromRequest('cover_path')
-                ->toMediaCollection('cover', 'public');
-        }
-
         return redirect()->route('profile.show', ['user' => $user]);
     }
 

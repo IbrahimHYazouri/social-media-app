@@ -75,7 +75,7 @@ const submit = () => {
     <Head title="Profile"/>
 
     <AuthenticatedLayout>
-        <div class="max-w-[768px] mx-auto h-full overflow-auto">
+        <div class="max-w-[768px] lg:max-w-[1100px] mx-auto h-full overflow-auto">
             <div class="px-4">
                 <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
                     <img :src="coverImageSrc || user.cover_url || '/img/default_cover.jpg'"

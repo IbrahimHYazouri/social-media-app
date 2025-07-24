@@ -2,8 +2,11 @@
 import {useForm, usePage} from "@inertiajs/vue3";
 import {BookmarkIcon} from '@heroicons/vue/24/solid'
 import BaseModal from "@/Components/app/BaseModal.vue";
+import {Post} from "@/types/post";
+import {watch} from "vue";
 
-defineProps<{
+const props = defineProps<{
+    post?: Post,
     show: boolean
 }>()
 
@@ -14,22 +17,37 @@ const emit = defineEmits<{
 const authUser = usePage().props.auth.user;
 
 const form = useForm({
-    body: '',
-    user_id: authUser.id
+    body: props.post?.body || '',
+    user_id: props.post?.user_id || authUser.id
+})
+
+watch(() => props.post, (newPost) => {
+    form.body = newPost?.body || ''
+    form.user_id = newPost?.user_id || authUser.id
 })
 
 const submit = () => {
-    form.post(route('posts.store'), {
-        onSuccess: () => {
-            emit('close')
-        }
-    })
+    if (props.post && props.post.id) {
+        form.put(route('posts.update', props.post.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit('close')
+            },
+        })
+    } else {
+        form.post(route('posts.store'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit('close')
+            }
+        })
+    }
 }
 </script>
 
 <template>
     <BaseModal
-        title="Create Post"
+        :title="post ? 'Update Post' : 'Create Post'"
         :show="show" @close="$emit('close')"
     >
         <div class="p-4">

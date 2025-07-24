@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import {Disclosure, DisclosureButton} from '@headlessui/vue'
 import {ChatBubbleLeftRightIcon, HandThumbUpIcon} from '@heroicons/vue/24/outline'
+import {Post} from "@/types/post";
+import PostHeader from "@/Components/app/PostHeader.vue";
+
+defineProps<{
+    post: Post
+}>()
 </script>
 
 <template>
     <div class="bg-white border dark:bg-slate-950 dark:border-slate-900 dark:text-gray-100 rounded p-4 mb-3">
+        <div class="flex items-center justify-between mb-3">
+            <PostHeader :post="post"/>
+        </div>
         <div class="mb-3">
-            Lorem ipsum
+            {{post.body}}
         </div>
         <Disclosure v-slot="{ open }">
             <div class="flex gap-2">

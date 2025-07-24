@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileImageController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/images/{user}', [ProfileImageController::class, 'update'])->name('profile.images.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('posts', PostController::class);
 });
 
 require __DIR__.'/auth.php';

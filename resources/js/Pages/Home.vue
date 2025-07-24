@@ -5,6 +5,16 @@ import GroupList from "@/Components/app/GroupList.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import PostList from "@/Components/app/PostList.vue";
 import FollowingList from "@/Components/app/FollowingList.vue";
+import {Post} from "@/types/post";
+import {computed} from "vue";
+
+const props = defineProps<{
+    feed: {
+        data: Post[]
+    }
+}>()
+
+const posts = computed<Post[]>(() => props.feed.data);
 </script>
 
 <template>
@@ -20,7 +30,7 @@ import FollowingList from "@/Components/app/FollowingList.vue";
             </div>
             <div class="lg:col-span-6 lg:order-2 h-full overflow-hidden flex flex-col">
                 <CreatePost />
-                <PostList />
+                <PostList :posts="posts"/>
             </div>
         </div>
     </AuthenticatedLayout>

@@ -1,11 +1,12 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "Social Media app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "A simple social media based app, with post, group, user support",
     "keywords": [
         "laravel",
-        "framework"
+        "vuejs",
+        "social-media"
     ],
     "license": "MIT",
     "require": {

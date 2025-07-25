@@ -7,6 +7,9 @@ namespace App\Models;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
 
 /**
  * @property-read int $id
@@ -15,8 +18,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
  */
-final class Post extends Model
+final class Post extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'body',
         'user_id',
@@ -26,5 +31,24 @@ final class Post extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('attachments')
+            ->acceptsMimeTypes([
+                'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/pdf',
+                'text/csv',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+    }
+
+    public function attachments(): MediaCollection
+    {
+        return $this->getMedia('attachments');
     }
 }

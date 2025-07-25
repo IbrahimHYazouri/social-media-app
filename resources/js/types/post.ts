@@ -6,4 +6,5 @@ export interface Post {
     user ?: User;
     user_id: number;
     updated_at: string;
+    attachments: Object
 }

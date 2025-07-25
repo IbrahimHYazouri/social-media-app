@@ -10,6 +10,7 @@ import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import PostModal from "@/Components/app/PostModal.vue";
+import PostAttachments from "@/Components/app/PostAttachments.vue";
 
 const props = defineProps<{
     post: Post
@@ -22,7 +23,7 @@ const form = useForm({});
 const destroy = () => {
     form.delete(route('posts.destroy', props.post.id), {
         onSuccess: () => {
-          confirmPostDeletion.value = false
+            confirmPostDeletion.value = false
         },
         preserveScroll: true
     })
@@ -42,7 +43,14 @@ const destroy = () => {
             </div>
         </div>
         <div class="mb-3">
-            {{post.body}}
+            {{ post.body }}
+        </div>
+        <div class="grid gap-3 mb-3"
+             :class="[
+                post.attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+            ]"
+        >
+            <PostAttachments :attachments="post.attachments" />
         </div>
         <Disclosure v-slot="{ open }">
             <div class="flex gap-2">
@@ -64,7 +72,7 @@ const destroy = () => {
         </Disclosure>
     </div>
 
-    <PostModal :post="post" :show="showUpdatePostModal" @close="showUpdatePostModal = false" />
+    <PostModal :post="post" :show="showUpdatePostModal" @close="showUpdatePostModal = false"/>
     <Modal :show="confirmPostDeletion" @close="confirmPostDeletion = false">
         <div class="p-6">
             <h2

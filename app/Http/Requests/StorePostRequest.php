@@ -43,7 +43,7 @@ final class StorePostRequest extends FormRequest
         return [
             'body' => ['nullable', 'string', 'max:1024'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
-            'attachments' => ['array', 'max:15', new TotalFileSize(self::$maxTotalSize)],
+            'attachments' => ['sometimes', 'array', 'max:15', new TotalFileSize(self::$maxTotalSize)],
             'attachments.*' => ['file',
                 File::types(self::$extensions)->max(self::$maxFileSize / 1024),
             ],

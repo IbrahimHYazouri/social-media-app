@@ -1,4 +1,5 @@
 import {User} from "@/types/index";
+import {Attachment} from "@/types/attachment";
 
 export interface Post {
     id?: number;
@@ -6,5 +7,5 @@ export interface Post {
     user ?: User;
     user_id: number;
     updated_at: string;
-    attachments: Object
+    attachments: Attachment[]
 }

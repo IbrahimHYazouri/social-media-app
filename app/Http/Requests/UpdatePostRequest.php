@@ -4,10 +4,27 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Rules\TotalFileSize;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\File;
 
 final class UpdatePostRequest extends FormRequest
 {
+    public static array $extensions = [
+        'jpg', 'jpeg', 'png', 'gif', 'webp',
+        'doc', 'docx', 'pdf', 'csv', 'xls', 'xlsx',
+    ];
+
+    /**
+     * Maximum file size in bytes (100MB per file)
+     */
+    public static int $maxFileSize = 100 * 1024 * 1024;
+
+    /**
+     * Maximum total size for all files (1GB)
+     */
+    public static int $maxTotalSize = 1 * 1024 * 1024 * 1024;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -26,6 +43,12 @@ final class UpdatePostRequest extends FormRequest
         return [
             'body' => ['nullable', 'string', 'max:1024'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
+            'attachments' => ['sometimes', 'array', 'max:15', new TotalFileSize(self::$maxTotalSize)],
+            'attachments.*' => ['file',
+                File::types(self::$extensions)->max(self::$maxFileSize / 1024),
+            ],
+            'deleted_attachment_ids' => ['sometimes', 'array'],
+            'deleted_attachment_ids.*' => ['numeric'],
         ];
     }
 }

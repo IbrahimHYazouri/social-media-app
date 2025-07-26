@@ -4,30 +4,16 @@ import {ChatBubbleLeftRightIcon, HandThumbUpIcon} from '@heroicons/vue/24/outlin
 import {Post} from "@/types/post";
 import PostHeader from "@/Components/app/PostHeader.vue";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
-import {useForm} from "@inertiajs/vue3";
-import {ref} from "vue";
-import Modal from "@/Components/Modal.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
-import PostModal from "@/Components/app/PostModal.vue";
 import PostAttachments from "@/Components/app/PostAttachments.vue";
 
-const props = defineProps<{
+defineProps<{
     post: Post
 }>()
 
-const showUpdatePostModal = ref(false);
-const confirmPostDeletion = ref(false);
-const form = useForm({});
-
-const destroy = () => {
-    form.delete(route('posts.destroy', props.post.id), {
-        onSuccess: () => {
-            confirmPostDeletion.value = false
-        },
-        preserveScroll: true
-    })
-}
+defineEmits<{
+    (e: 'update', post: Post): void
+    (e: 'destroy', post: Post): void
+}>()
 </script>
 
 <template>
@@ -37,8 +23,8 @@ const destroy = () => {
             <div class="flex items-center">
                 <EditDeleteDropdown
                     :post="post"
-                    @update="showUpdatePostModal = true"
-                    @delete="confirmPostDeletion = true"
+                    @update="$emit('update', post)"
+                    @delete="$emit('destroy', post)"
                 />
             </div>
         </div>
@@ -52,7 +38,7 @@ const destroy = () => {
         >
             <PostAttachments :attachments="post.attachments" />
         </div>
-        <Disclosure v-slot="{ open }">
+        <Disclosure>
             <div class="flex gap-2">
                 <button
                     class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center  rounded-lg py-2 px-4 flex-1"
@@ -71,35 +57,4 @@ const destroy = () => {
             </div>
         </Disclosure>
     </div>
-
-    <PostModal :post="post" :show="showUpdatePostModal" @close="showUpdatePostModal = false"/>
-    <Modal :show="confirmPostDeletion" @close="confirmPostDeletion = false">
-        <div class="p-6">
-            <h2
-                class="text-lg font-medium text-gray-900 dark:text-gray-100"
-            >
-                Are you sure you want to delete this post?
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Once your post is deleted, all of its resources and data
-                will be permanently deleted.
-            </p>
-
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="confirmPostDeletion = false">
-                    Cancel
-                </SecondaryButton>
-
-                <DangerButton
-                    class="ms-3"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    @click="destroy"
-                >
-                    Delete post
-                </DangerButton>
-            </div>
-        </div>
-    </Modal>
 </template>

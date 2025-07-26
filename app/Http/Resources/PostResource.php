@@ -27,7 +27,7 @@ final class PostResource extends JsonResource
             'body' => $post->body,
             'updated_at' => $post->updated_at->format('Y-m-d H:i:s'),
             'user' => UserResource::make($post->user),
-            'attachments' => $post->attachments()
+            'attachments' => PostAttachmentResource::collection($post->attachments()),
         ];
     }
 }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {useForm, usePage} from "@inertiajs/vue3";
-import {BookmarkIcon, PaperClipIcon, XMarkIcon} from '@heroicons/vue/24/solid'
+import {BookmarkIcon, PaperClipIcon, XMarkIcon, ArrowUturnLeftIcon} from '@heroicons/vue/24/solid'
 import BaseModal from "@/Components/app/BaseModal.vue";
 import {Post} from "@/types/post";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {isImage} from "@/helper";
+import {Attachment} from "@/types/attachment";
 
 interface AttachmentFile {
     file: File;
@@ -26,14 +27,18 @@ const form = useForm<{
     body: string,
     user_id: number,
     attachments: File[],
+    deleted_attachment_ids?: Array<number>,
     _method?: string | null
 }>({
     body: props.post?.body || '',
     user_id: props.post?.user_id || authUser.id,
-    attachments: []
+    attachments: [],
+    deleted_attachment_ids: [],
+    _method: ''
 })
 
 const attachments = ref<AttachmentFile[]>([]);
+const existingAttachments = computed<Attachment[]>(() => props.post?.attachments || []);
 
 watch(() => props.post, (newPost) => {
     form.body = newPost?.body || ''
@@ -72,8 +77,18 @@ const readFile = (file: File): Promise<string | null> => {
     })
 }
 
-const removeFile = (attachment: AttachmentFile): void => {
+const removeAttachment = (attachment: AttachmentFile): void => {
     attachments.value = attachments.value.filter(a => a !== attachment)
+}
+
+const removeExistingAttachment = (attachment: Attachment): void => {
+    form.deleted_attachment_ids?.push(attachment.id);
+    attachment.deleted = true;
+}
+
+const undoRemovingExisingAttachment = (attachment: Attachment): void => {
+    form.deleted_attachment_ids = form.deleted_attachment_ids?.filter((id) => id !== attachment.id)
+    attachment.deleted = false;
 }
 
 const submit = () => {
@@ -110,14 +125,14 @@ const submit = () => {
             </div>
 
             <div class="grid gap-3 my-3"
-                :class="attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'"
+                 :class="attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'"
             >
                 <div v-for="attachment of attachments">
                     <div
                         class="group aspect-square bg-blue-100 flex flex-col items-center justify-center text-gray-500 relative border-2"
                     >
                         <button
-                            @click="removeFile(attachment)"
+                            @click="removeAttachment(attachment)"
                             class="absolute z-20 right-3 top-3 w-7 h-7 flex items-center justify-center bg-black/30 text-white rounded-full hover:bg-black/40"
                         >
                             <XMarkIcon class="h-5 w-5"/>
@@ -134,6 +149,47 @@ const submit = () => {
 
                             <small class="text-center">
                                 {{ attachment.file.name }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid gap-3 my-3"
+                 :class="existingAttachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'"
+            >
+                <div v-for="attachment of existingAttachments">
+                    <div
+                        class="group aspect-square bg-blue-100 flex flex-col items-center justify-center text-gray-500 relative border-2"
+                    >
+                        <div v-if="attachment.deleted"
+                             class="absolute z-10 left-0 bottom-0 right-0 py-2 px-3 text-sm bg-black text-white flex justify-between items-center">
+                            To be deleted
+
+                            <ArrowUturnLeftIcon @click="undoRemovingExisingAttachment(attachment)"
+                                                class="w-4 h-4 cursor-pointer"/>
+                        </div>
+                        <button
+                            @click="removeExistingAttachment(attachment)"
+                            class="absolute z-20 right-3 top-3 w-7 h-7 flex items-center justify-center bg-black/30 text-white rounded-full hover:bg-black/40"
+                        >
+                            <XMarkIcon class="h-5 w-5"/>
+                        </button>
+
+                        <img
+                            v-if="attachment.is_image"
+                            :src="attachment.preview_url || ''"
+                            alt="attachment"
+                            class="object-contain aspect-square"
+                            :class="{'opacity-50': attachment.deleted}"
+                        />
+                        <div v-else class="flex flex-col justify-center items-center px-3"
+                        :class="{'opacity-50': attachment.deleted}"
+                        >
+                            <PaperClipIcon class="w-10 h-10 mb-3"/>
+
+                            <small class="text-center">
+                                {{ attachment.name }}
                             </small>
                         </div>
                     </div>

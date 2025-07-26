@@ -14,6 +14,7 @@ final class PostController extends Controller
 {
     public function __construct(protected PostService $postService)
     {
+        //
     }
 
     public function store(StorePostRequest $request): RedirectResponse
@@ -25,7 +26,7 @@ final class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
-        $post->update($request->validated());
+        $this->postService->updatePostWithAttachments($post, $request->validated());
 
         return redirect()->route('dashboard')->with('success', 'Post updated');
     }

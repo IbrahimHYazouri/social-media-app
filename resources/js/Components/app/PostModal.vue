@@ -22,6 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const authUser = usePage().props.auth.user;
+const allowedAttachmentExtensions= usePage().props.allowed_attachment_extensions;
 
 const form = useForm<{
     body: string,
@@ -39,6 +40,19 @@ const form = useForm<{
 
 const attachments = ref<AttachmentFile[]>([]);
 const existingAttachments = computed<Attachment[]>(() => props.post?.attachments || []);
+
+const showInvalidAttachmentTypeText = computed(() => {
+    for (let attachment of attachments.value) {
+        const file = attachment.file;
+        let parts = file.name.split('.');
+        let extension = parts.pop().toLowerCase();
+        if (!allowedAttachmentExtensions.includes(extension)) {
+            return true;
+        }
+    }
+
+    return false;
+})
 
 watch(() => props.post, (newPost) => {
     form.body = newPost?.body || ''
@@ -91,6 +105,14 @@ const undoRemovingExisingAttachment = (attachment: Attachment): void => {
     attachment.deleted = false;
 }
 
+const getAttachmentError = (index: number) => {
+    if (!form.errors) {
+        return;
+    }
+
+    return form.errors[`attachments.${index}`] || null;
+}
+
 const submit = () => {
     form.attachments = attachments.value.map(attachment => attachment.file);
     if (props.post && props.post.id) {
@@ -124,12 +146,18 @@ const submit = () => {
                     class="dark:bg-slate-950 dark:text-white py-2 px-3 border-2 border-gray-200 dark:border-slate-900 text-gray-500 rounded-md mb-3 w-full resize-none"></textarea>
             </div>
 
+            <div v-if="showInvalidAttachmentTypeText" class="border-l-4 border-amber-500 py-2 px-3 bg-amber-100 mt-3 text-gray-800">
+                Files must be one of the following extensions <br>
+                <small>{{ allowedAttachmentExtensions.join(', ') }}</small>
+            </div>
+
             <div class="grid gap-3 my-3"
                  :class="attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'"
             >
-                <div v-for="attachment of attachments">
+                <div v-for="(attachment, index) of attachments">
                     <div
                         class="group aspect-square bg-blue-100 flex flex-col items-center justify-center text-gray-500 relative border-2"
+                        :class="{'border-red-500': getAttachmentError(index)}"
                     >
                         <button
                             @click="removeAttachment(attachment)"
@@ -152,6 +180,7 @@ const submit = () => {
                             </small>
                         </div>
                     </div>
+                    <small class="text-red-500">{{ getAttachmentError(index) }}</small>
                 </div>
             </div>
 

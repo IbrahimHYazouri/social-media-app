@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ final class HomeController extends Controller
 
         return Inertia::render('Home', [
             'feed' => PostResource::collection($posts),
+            'allowed_attachment_extensions' => StorePostRequest::$extensions,
         ]);
     }
 }

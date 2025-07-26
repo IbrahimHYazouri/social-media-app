@@ -1,30 +1,13 @@
 <script setup lang="ts">
 import {PaperClipIcon} from "@heroicons/vue/24/solid/index.js";
 import {computed} from "vue";
-
-interface Attachment {
-    uuid: string
-    name: string
-    file_name: string
-    original_url: string
-    preview_url: string
-    extension: string
-    size: number
-    order: number
-    custom_properties: any[]
-}
+import {Attachment} from "@/types/attachment";
 
 const props = defineProps<{
-    attachments: Record<string, Attachment>
+    attachments: Attachment[]
 }>()
 
 const attachmentList = computed(() => Object.values(props.attachments))
-
-const isImage = (attachment: Attachment): boolean => {
-    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'].includes(
-        attachment.extension.toLowerCase()
-    )
-}
 </script>
 
 <template>
@@ -34,8 +17,8 @@ const isImage = (attachment: Attachment): boolean => {
                 +{{ attachmentList.length - 4 }} more
             </div>
 
-            <img v-if="isImage(attachment)"
-                 :src="attachment.original_url"
+            <img v-if="attachment.is_image"
+                 :src="attachment.preview_url"
                  alt="attachment"
                  class="object-contain aspect-square"/>
             <div v-else class="flex flex-col justify-center items-center">

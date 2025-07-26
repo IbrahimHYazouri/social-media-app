@@ -16,14 +16,14 @@ final class StorePostRequest extends FormRequest
     ];
 
     /**
-     * Maximum file size in bytes (100MB per file)
+     * Maximum file size in bytes (10MB per file)
      */
-    public static int $maxFileSize = 100 * 1024 * 1024;
+    public static int $maxFileSize = 10 * 1024 * 1024;
 
     /**
-     * Maximum total size for all files (1GB)
+     * Maximum total size for all files (150B)
      */
-    public static int $maxTotalSize = 1 * 1024 * 1024 * 1024;
+    public static int $maxTotalSize = 150 * 1024 * 1024;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -47,6 +47,13 @@ final class StorePostRequest extends FormRequest
             'attachments.*' => ['file',
                 File::types(self::$extensions)->max(self::$maxFileSize / 1024),
             ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'attachments.*.mimes' => 'Invalid file type.',
         ];
     }
 }

@@ -7,14 +7,17 @@ import PostModal from "@/Components/app/PostModal.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import PostAttachmentPreviewModal from "@/Components/app/PostAttachmentPreviewModal.vue";
 
 defineProps<{
     posts: Post[]
 }>()
 
 const selectedPost = ref<Post|null>(null);
+const selectedAttachmentIndex = ref({});
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
+const showPostAttachmentPreviewModal = ref(false);
 
 const openEditModal = (post: Post) => {
     selectedPost.value = post;
@@ -24,6 +27,12 @@ const openEditModal = (post: Post) => {
 const openConfirmDeleteModal = (post: Post) => {
     selectedPost.value = post;
     showDeleteModal.value = true;
+}
+
+const openPostAttachmentPreviewModal = (post: Post, index: number) => {
+    selectedPost.value = post;
+    selectedAttachmentIndex.value = index;
+    showPostAttachmentPreviewModal.value = true;
 }
 
 const destroy = () => {
@@ -49,6 +58,11 @@ const closeDeleteModal = () => {
     showDeleteModal.value  = false;
     selectedPost.value   = null;
 }
+
+const closeAttachmentsPreviewModal = () => {
+    showPostAttachmentPreviewModal.value = false;
+    selectedPost.value = null;
+}
 </script>
 
 <template>
@@ -58,6 +72,7 @@ const closeDeleteModal = () => {
             :post="post"
             @update="openEditModal"
             @destroy="openConfirmDeleteModal"
+            @preview-attachments="openPostAttachmentPreviewModal"
         />
 
         <PostModal v-if="selectedPost"
@@ -91,5 +106,13 @@ const closeDeleteModal = () => {
                 </div>
             </div>
         </Modal>
+
+        <PostAttachmentPreviewModal
+            v-if="selectedPost"
+            :attachments="selectedPost.attachments"
+            :index="selectedAttachmentIndex"
+            :show="showPostAttachmentPreviewModal"
+            @close="closeAttachmentsPreviewModal"
+        />
     </div>
 </template>

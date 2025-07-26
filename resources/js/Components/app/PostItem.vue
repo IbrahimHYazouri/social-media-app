@@ -6,14 +6,19 @@ import PostHeader from "@/Components/app/PostHeader.vue";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 import PostAttachments from "@/Components/app/PostAttachments.vue";
 
-defineProps<{
+const props = defineProps<{
     post: Post
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
     (e: 'update', post: Post): void
     (e: 'destroy', post: Post): void
+    (e: 'previewAttachments', post: Post, index: number): void
 }>()
+
+const openAttachmentPreview = (index: number) => {
+    emit('previewAttachments', props.post, index)
+}
 </script>
 
 <template>
@@ -36,7 +41,7 @@ defineEmits<{
                 post.attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
             ]"
         >
-            <PostAttachments :attachments="post.attachments" />
+            <PostAttachments :attachments="post.attachments" @preview="openAttachmentPreview"/>
         </div>
         <Disclosure>
             <div class="flex gap-2">

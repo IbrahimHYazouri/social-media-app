@@ -39,6 +39,11 @@ final class Post extends Model implements HasMedia
         return $this->hasMany(Reaction::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('attachments')

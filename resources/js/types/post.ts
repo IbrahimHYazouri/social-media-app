@@ -7,5 +7,7 @@ export interface Post {
     user ?: User;
     user_id: number;
     updated_at: string;
+    num_of_reactions: number;
+    user_has_reaction: boolean;
     attachments: Attachment[]
 }

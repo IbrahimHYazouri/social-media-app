@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Disclosure, DisclosureButton} from '@headlessui/vue'
+import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
 import {ChatBubbleLeftRightIcon, HandThumbUpIcon} from '@heroicons/vue/24/outline'
 import {Post} from "@/types/post";
 import PostHeader from "@/Components/app/PostHeader.vue";
@@ -7,6 +7,7 @@ import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 import PostAttachments from "@/Components/app/PostAttachments.vue";
 import {ref} from "vue";
 import axios from "axios";
+import CommentList from "@/Components/app/CommentList.vue";
 
 const props = defineProps<{
     post: Post
@@ -83,10 +84,14 @@ const toggleReaction = () => {
                     class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center bg-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 rounded-lg hover:bg-gray-200  py-2 px-4 flex-1"
                 >
                     <ChatBubbleLeftRightIcon class="w-5 h-5"/>
-                    <span class="mr-2">17</span>
+                    <span class="mr-2">{{post.num_of_comments}}</span>
                     Comment
                 </DisclosureButton>
             </div>
+
+            <DisclosurePanel class="mt-5 max-h-[400px] overflow-auto">
+                <CommentList :post="post" />
+            </DisclosurePanel>
         </Disclosure>
     </div>
 </template>

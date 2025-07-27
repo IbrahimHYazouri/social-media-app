@@ -33,4 +33,11 @@ class CommentController extends Controller
 
         return CommentResource::make($comment);
     }
+
+    public function destroy(Comment $comment)
+    {
+        $comment->delete();
+
+        return response()->noContent();
+    }
 }

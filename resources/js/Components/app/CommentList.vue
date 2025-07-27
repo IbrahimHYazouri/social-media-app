@@ -40,6 +40,15 @@ const update = () => {
             })
         })
 }
+
+const destroy = (comment: Comment) => {
+    axios.delete(route('comments.destroy', comment.id))
+        .then((_) => {
+            const index = props.post.comments.findIndex(c => c.id === comment.id);
+            props.post.comments.splice(index, 1);
+            props.post.num_of_comments--;
+        })
+}
 </script>
 
 <template>
@@ -86,6 +95,7 @@ const update = () => {
             <EditDeleteDropdown
                 :comment="comment"
                 @update="edit(comment)"
+                @delete="destroy(comment)"
             />
         </div>
         <div class="pl-12">

@@ -24,16 +24,16 @@ final class PostService
     public function updatePostWithAttachments(Post $post, array $data)
     {
         return DB::transaction(function () use ($post, $data) {
-           if (!empty($data['deleted_attachment_ids'])) {
-               foreach ($data['deleted_attachment_ids'] as $mediaId) {
-                   $media = $post->attachments()->find($mediaId);
-                   if ($media) {
-                       $media->delete();
-                   }
-               }
-           }
+            if (! empty($data['deleted_attachment_ids'])) {
+                foreach ($data['deleted_attachment_ids'] as $mediaId) {
+                    $media = $post->attachments()->find($mediaId);
+                    if ($media) {
+                        $media->delete();
+                    }
+                }
+            }
 
-           $this->handleAttachments($post, $data['attachments'] ?? []);
+            $this->handleAttachments($post, $data['attachments'] ?? []);
 
             $post->update(
                 Arr::except($data, ['attachments', 'deleted_attachments_ids'])

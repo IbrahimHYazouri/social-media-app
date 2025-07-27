@@ -19,7 +19,7 @@ final class HomeController extends Controller
     public function __invoke(Request $request): Response
     {
         $posts = Post::withCount('reactions')
-            ->with('user')->paginate(20);
+            ->with('user', 'comments', 'comments.user')->paginate(20);
 
         return Inertia::render('Home', [
             'feed' => PostResource::collection($posts),

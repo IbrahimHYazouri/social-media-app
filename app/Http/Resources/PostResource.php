@@ -21,6 +21,7 @@ final class PostResource extends JsonResource
          * @var Post $post
          */
         $post = $this->resource;
+        $comments = $this->comments;
 
         return [
             'id' => $post->id,
@@ -30,6 +31,8 @@ final class PostResource extends JsonResource
             'num_of_reactions' => $this->reactions_count,
             'user_has_reaction' => $this->reactions_count > 0,
             'attachments' => PostAttachmentResource::collection($post->attachments()),
+            'comments' => $comments,
+            'num_of_comments' => count($comments),
         ];
     }
 }

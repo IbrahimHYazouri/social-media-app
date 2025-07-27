@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
@@ -24,5 +25,12 @@ class CommentController extends Controller
 
         $comment = Comment::create($data);
         return response(CommentResource::make($comment), 201);
+    }
+
+    public function update(UpdateCommentRequest $request, Comment $comment)
+    {
+        $comment->update($request->validated());
+
+        return CommentResource::make($comment);
     }
 }

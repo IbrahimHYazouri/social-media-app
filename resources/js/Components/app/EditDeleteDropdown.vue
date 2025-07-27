@@ -5,9 +5,11 @@ import {EllipsisVerticalIcon, PencilIcon, TrashIcon} from "@heroicons/vue/20/sol
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
 import {computed} from "vue";
 import {User} from "@/types";
+import {Comment} from "@/types/comment";
 
 const props = defineProps<{
-    post: Post
+    post?: Post,
+    comment ?: Comment
 }>()
 
 defineEmits<{
@@ -16,7 +18,7 @@ defineEmits<{
 }>()
 
 const authUser = usePage().props.auth.user;
-const owner = computed<User>(() => props.post?.user);
+const owner = computed<User>(() => props.post?.user || props.comment?.user);
 
 const editAllowed = computed(() => owner.value.id === authUser.id);
 const deleteAllowed = computed(() => owner.value.id === authUser.id);

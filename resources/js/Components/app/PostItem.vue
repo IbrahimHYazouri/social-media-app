@@ -88,7 +88,10 @@ const toggleReaction = () => {
             </div>
 
             <DisclosurePanel class="mt-5 max-h-[400px] overflow-auto">
-                <CommentList :post="post" />
+                <CommentList
+                    :post="post"
+                    :data="{comments: post.comments}"
+                />
             </DisclosurePanel>
         </Disclosure>
     </div>

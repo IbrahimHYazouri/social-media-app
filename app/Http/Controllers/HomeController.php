@@ -23,7 +23,15 @@ final class HomeController extends Controller
                 'user',
                 'reactionByCurrentUser',
                 'comments' => function ($query) {
-                    $query->withCount('reactions')->with('user', 'reactionByCurrentUser');
+                    $query->whereNull('parent_id')
+                        ->withCount('reactions')
+                        ->with([
+                            'user',
+                            'reactionByCurrentUser',
+                            'replies' => function ($q) {
+                                $q->with('user', 'reactionByCurrentUser')->withCount('reactions');
+                            },
+                        ]);
                 },
             ])->paginate(20);
 

@@ -30,6 +30,8 @@ final class CommentResource extends JsonResource
             'num_of_reactions' => $this->reactions_count,
             'user_has_reacted' => $this->relationLoaded('reactionByCurrentUser') && $this->reactionByCurrentUser !== null,
             'updated_at' => $comment->updated_at->format('Y-m-d H:i:s'),
+            'replies' => self::collection($this->whenLoaded('replies')),
+            'num_of_replies' => $this->replies->count(),
             'user' => [
                 'id' => $comment->user->id,
                 'name' => $comment->user->name,

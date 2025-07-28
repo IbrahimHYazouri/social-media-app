@@ -8,5 +8,7 @@ export interface Comment {
     updated_at: string;
     num_of_reactions: number;
     user_has_reacted: boolean;
+    replies?: Comment[],
+    num_of_replies?: number;
     user?: User;
 }

@@ -5,12 +5,17 @@ import {ref} from "vue";
 import axios from "axios";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import {HandThumbUpIcon} from "@heroicons/vue/24/outline/index.js";
+import {HandThumbUpIcon, ChatBubbleLeftEllipsisIcon} from "@heroicons/vue/24/outline/index.js";
+import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
 import {Comment} from "@/types/comment";
 
 
 const props = defineProps<{
-    post: Post
+    post: Post,
+    data: {
+      comments: Comment[]
+    },
+    parent ?: Comment
 }>()
 
 const authUser = usePage().props.auth.user;
@@ -19,11 +24,16 @@ const selectedComment = ref(null);
 
 const create = () => {
     axios.post(route('posts.comments.store', props.post.id), {
-        comment: newComment.value
-    }).then(({comment}) => {
+        comment: newComment.value,
+        parent_id: props.parent?.id || null
+    }).then((response) => {
         newComment.value = '';
-        props.post.comments.unshift(comment);
+        props.data.comments.unshift(response.data);
         props.post.num_of_comments++;
+
+        if (props.parent) {
+            props.parent.num_of_replies++;
+        }
     })
 }
 
@@ -33,22 +43,22 @@ const edit = (comment: Comment) => {
 
 const update = () => {
     axios.put(route('comments.update', selectedComment.value?.id), selectedComment.value)
-        .then(({comment}) => {
-            selectedComment.value = null;
-            props.post.comments = props.post.comments.map((c) => {
-                if (c.id === comment.id) {
-                    return comment;
-                }
-                return c;
+        .then((response) => {
+                selectedComment.value = null;
+                props.data.comments = props.data.comments.map((c) => {
+                    if (c.id === response.data.id) {
+                        return response.data;
+                    }
+                    return c;
+                })
             })
-        })
 }
 
 const destroy = (comment: Comment) => {
     axios.delete(route('comments.destroy', comment.id))
         .then((_) => {
-            const index = props.post.comments.findIndex(c => c.id === comment.id);
-            props.post.comments.splice(index, 1);
+            const index = props.data.comments.findIndex(c => c.id === comment.id);
+            props.data.comments.splice(index, 1);
             props.post.num_of_comments--;
         })
 }
@@ -87,7 +97,7 @@ const toggleReaction = (comment: Comment) => {
         </div>
     </div>
 
-    <div v-for="comment of post.comments" class="mb-4">
+    <div v-for="comment of data.comments" class="mb-4">
         <div class="flex justify-between gap-2">
             <div class="flex gap-2">
                 <Link :href="route('profile.show', comment.user.username)">
@@ -128,20 +138,34 @@ const toggleReaction = (comment: Comment) => {
                 </div>
             </div>
             <p>{{comment.comment}}</p>
-            <div class="mt-1 flex gap-2">
-                <button
-                    @click="toggleReaction(comment)"
+            <Disclosure>
+                <div class="mt-1 flex gap-2">
+                    <button
+                        @click="toggleReaction(comment)"
                         class="flex items-center text-xs text-indigo-500 py-0.5 px-1  rounded-lg"
-                    :class="[
+                        :class="[
                         comment.user_has_reacted ?
                          'bg-indigo-50 hover:bg-indigo-100' :
                          'hover:bg-indigo-50'
                     ]">
-                    <HandThumbUpIcon class="w-3 h-3 mr-1"/>
-                    <span class="mr-2">{{comment.num_of_reactions}}</span>
-                    Like
-                </button>
-            </div>
+                        <HandThumbUpIcon class="size-3 mr-1"/>
+                        <span class="mr-2">{{comment.num_of_reactions}}</span>
+                        Like
+                    </button>
+                    <DisclosureButton class="flex items-center text-xs text-indigo-500 py-0.5 px-1 hover:bg-indigo-100 rounded-lg">
+                        <ChatBubbleLeftEllipsisIcon class="size-3 mr-1"/>
+                        <span class="mr-2">{{ comment.num_of_replies }}</span>
+                        Replies
+                    </DisclosureButton>
+                </div>
+                <DisclosurePanel class="mt-3">
+                    <CommentList
+                        :post="post"
+                        :data="{comments: comment.replies}"
+                        :parent="comment"
+                    />
+                </DisclosurePanel>
+            </Disclosure>
         </div>
     </div>
 </template>

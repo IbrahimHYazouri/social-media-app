@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
@@ -10,7 +12,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class CommentController extends Controller
+final class CommentController extends Controller
 {
     public function store(StoreCommentRequest $request, Post $post)
     {
@@ -24,6 +26,7 @@ class CommentController extends Controller
         $data['user_id'] = $user->id;
 
         $comment = Comment::create($data);
+
         return response(CommentResource::make($comment), 201);
     }
 

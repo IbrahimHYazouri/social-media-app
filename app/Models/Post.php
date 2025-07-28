@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
@@ -34,9 +35,9 @@ final class Post extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
-    public function reactions(): HasMany
+    public function reactions(): MorphMany
     {
-        return $this->hasMany(Reaction::class);
+        return $this->morphMany(Reaction::class, 'reactable', 'object_type', 'object_id');
     }
 
     public function comments(): HasMany

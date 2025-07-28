@@ -6,5 +6,7 @@ export interface Comment {
     user_id: number;
     comment: string;
     updated_at: string;
-    user: User;
+    num_of_reactions: number;
+    user_has_reacted: boolean;
+    user?: User;
 }

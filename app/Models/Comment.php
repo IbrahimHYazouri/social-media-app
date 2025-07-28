@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property-read int $id
@@ -14,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
  */
-class Comment extends Model
+final class Comment extends Model
 {
     protected $fillable = ['post_id', 'user_id', 'comment'];
 
@@ -26,5 +31,17 @@ class Comment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function reactions(): MorphMany
+    {
+        return $this->morphMany(Reaction::class, 'reactable', 'object_type', 'object_id');
+    }
+
+    public function reactionByCurrentUser(): HasOne
+    {
+        return $this->hasOne(Reaction::class, 'object_id')
+            ->where('object_type', self::class)
+            ->where('user_id', Auth::id());
     }
 }

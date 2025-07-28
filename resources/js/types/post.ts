@@ -10,7 +10,7 @@ export interface Post {
     updated_at: string;
     num_of_reactions: number;
     num_of_comments: number;
-    user_has_reaction: boolean;
+    user_has_reacted: boolean;
     comments: Comment[]
     attachments: Attachment[]
 }

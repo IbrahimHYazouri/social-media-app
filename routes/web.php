@@ -23,9 +23,10 @@ Route::middleware('auth')->group(function () {
         ->only(['store'])
         ->shallow();
     Route::resource('comments', CommentController::class)
-        ->only(['update','destroy']);
+        ->only(['update', 'destroy']);
 
     Route::post('posts/{post}/reactions', ReactionController::class)->name('posts.reactions');
+    Route::post('comments/{comment}/reactions', ReactionController::class)->name('comments.reactions');
 });
 
 require __DIR__.'/auth.php';

@@ -29,9 +29,9 @@ final class PostResource extends JsonResource
             'updated_at' => $post->updated_at->format('Y-m-d H:i:s'),
             'user' => UserResource::make($post->user),
             'num_of_reactions' => $this->reactions_count,
-            'user_has_reaction' => $this->reactions_count > 0,
+            'user_has_reacted' => $this->relationLoaded('reactionByCurrentUser') && $this->reactionByCurrentUser !== null,
             'attachments' => PostAttachmentResource::collection($post->attachments()),
-            'comments' => $comments,
+            'comments' => CommentResource::collection($comments),
             'num_of_comments' => count($comments),
         ];
     }

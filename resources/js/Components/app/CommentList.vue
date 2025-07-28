@@ -5,6 +5,9 @@ import {ref} from "vue";
 import axios from "axios";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import {HandThumbUpIcon} from "@heroicons/vue/24/outline/index.js";
+import {Comment} from "@/types/comment";
+
 
 const props = defineProps<{
     post: Post
@@ -48,6 +51,17 @@ const destroy = (comment: Comment) => {
             props.post.comments.splice(index, 1);
             props.post.num_of_comments--;
         })
+}
+
+const toggleReaction = (comment: Comment) => {
+    axios.post(route('comments.reactions', comment.id), {
+        type: 'like'
+    }).then(({data}) => {
+        comment.num_of_reactions = data.num_of_reactions;
+        comment.user_has_reacted = data.user_has_reacted;
+    }).catch(error => {
+        console.error('Reaction failed', error)
+    })
 }
 </script>
 
@@ -113,7 +127,21 @@ const destroy = (comment: Comment) => {
                         class="flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 relative w-[100px]">Update</button>
                 </div>
             </div>
-            {{comment.comment}}
+            <p>{{comment.comment}}</p>
+            <div class="mt-1 flex gap-2">
+                <button
+                    @click="toggleReaction(comment)"
+                        class="flex items-center text-xs text-indigo-500 py-0.5 px-1  rounded-lg"
+                    :class="[
+                        comment.user_has_reacted ?
+                         'bg-indigo-50 hover:bg-indigo-100' :
+                         'hover:bg-indigo-50'
+                    ]">
+                    <HandThumbUpIcon class="w-3 h-3 mr-1"/>
+                    <span class="mr-2">{{comment.num_of_reactions}}</span>
+                    Like
+                </button>
+            </div>
         </div>
     </div>
 </template>

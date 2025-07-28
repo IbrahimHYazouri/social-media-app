@@ -30,11 +30,9 @@ const toggleReaction = () => {
 
     axios.post(route('posts.reactions', props.post.id), {
         type: 'like'
-    }).then((response) => {
-        const { num_of_reactions, current_user_has_reaction } = response.data;
-
-        props.post.num_of_reactions = num_of_reactions;
-        props.post.user_has_reaction = current_user_has_reaction;
+    }).then(({data}) => {
+        props.post.num_of_reactions = data.num_of_reactions;
+        props.post.user_has_reacted = data.user_has_reacted;
     }).catch(error => {
         console.error('Reaction failed', error)
     }).finally(() => {
@@ -71,7 +69,7 @@ const toggleReaction = () => {
                     @click="toggleReaction"
                     class="text-gray-800 dark:text-gray-100 flex gap-1 items-center justify-center  rounded-lg py-2 px-4 flex-1"
                     :class="[
-                    post.user_has_reaction ?
+                    post.user_has_reacted ?
                      'bg-sky-100 dark:bg-sky-900 hover:bg-sky-200 dark:hover:bg-sky-950' :
                      'bg-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800']
                      "

@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Auth;
  */
 final class Comment extends Model
 {
-    protected $fillable = ['post_id', 'user_id', 'comment'];
+    protected $fillable = ['post_id', 'user_id', 'comment', 'parent_id'];
 
     public function post(): BelongsTo
     {
@@ -43,5 +43,15 @@ final class Comment extends Model
         return $this->hasOne(Reaction::class, 'object_id')
             ->where('object_type', self::class)
             ->where('user_id', Auth::id());
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(self::class, 'parent_id')->with('user', 'replies');
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
     }
 }

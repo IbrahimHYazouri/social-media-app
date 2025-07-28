@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 final class Reaction extends Model
 {
-    protected $fillable = ['user_id', 'object_id', 'object_type', 'type'];
+    protected $fillable = ['user_id', 'type'];
 
     public function reactable(): MorphTo
     {

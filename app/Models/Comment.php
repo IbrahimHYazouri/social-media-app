@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Auth;
  */
 final class Comment extends Model
 {
-    protected $fillable = ['post_id', 'user_id', 'comment', 'parent_id'];
+    protected $fillable = ['post_id', 'user_id', 'comment', 'parent_id', 'depth'];
 
     public function post(): BelongsTo
     {

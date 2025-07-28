@@ -10,5 +10,6 @@ export interface Comment {
     user_has_reacted: boolean;
     replies?: Comment[],
     num_of_replies?: number;
+    depth: number;
     user?: User;
 }

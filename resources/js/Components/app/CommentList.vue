@@ -23,6 +23,10 @@ const newComment = ref('');
 const selectedComment = ref(null);
 
 const create = () => {
+    if (props.parent && props.parent.depth >= 1) {
+        return;
+    }
+
     axios.post(route('posts.comments.store', props.post.id), {
         comment: newComment.value,
         parent_id: props.parent?.id || null
@@ -76,7 +80,7 @@ const toggleReaction = (comment: Comment) => {
 </script>
 
 <template>
-    <div v-if="authUser" class="flex gap-2 mb-3">
+    <div v-if="authUser && (!parent || parent.depth < 1)" class="flex gap-2 mb-3">
         <Link :href="route('profile.show', authUser.username)">
             <img
                 :src="authUser?.avatar_url || '/img/default_avatar.webp'"
@@ -152,7 +156,9 @@ const toggleReaction = (comment: Comment) => {
                         <span class="mr-2">{{comment.num_of_reactions}}</span>
                         Like
                     </button>
-                    <DisclosureButton class="flex items-center text-xs text-indigo-500 py-0.5 px-1 hover:bg-indigo-100 rounded-lg">
+                    <DisclosureButton
+                        v-if="comment.depth < 2"
+                        class="flex items-center text-xs text-indigo-500 py-0.5 px-1 hover:bg-indigo-100 rounded-lg">
                         <ChatBubbleLeftEllipsisIcon class="size-3 mr-1"/>
                         <span class="mr-2">{{ comment.num_of_replies }}</span>
                         Replies

@@ -25,6 +25,19 @@ final class CommentController extends Controller
         $data['post_id'] = $post->id;
         $data['user_id'] = $user->id;
 
+        $depth = 0;
+        if (! empty($data['parent_id'])) {
+            $parent = Comment::findOrFail($data['parent_id']);
+            $depth = $parent->depth + 1;
+
+            if ($depth > 2) {
+                return response()->json([
+                    'message' => 'Sub-comments cannot be deeper than 2 levels.',
+                ], 422);
+            }
+        }
+        $data['depth'] = $depth;
+
         $comment = Comment::create($data);
 
         return response(CommentResource::make($comment), 201);

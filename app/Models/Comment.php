@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\Reactable;
+use App\Traits\HasReactions;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * @property-read int $id
  * @property-read string $comment
  * @property-read int $user_id
  * @property-read int $post_id
+ * @property-read int $reaction_count
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
  */
-final class Comment extends Model
+final class Comment extends Model implements Reactable
 {
+    use HasReactions;
+
     protected $fillable = ['post_id', 'user_id', 'comment', 'parent_id', 'depth'];
+
+    protected $appends = ['reactions_count'];
 
     public function post(): BelongsTo
     {
@@ -31,18 +35,6 @@ final class Comment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function reactions(): MorphMany
-    {
-        return $this->morphMany(Reaction::class, 'reactable', 'object_type', 'object_id');
-    }
-
-    public function reactionByCurrentUser(): HasOne
-    {
-        return $this->hasOne(Reaction::class, 'object_id')
-            ->where('object_type', self::class)
-            ->where('user_id', Auth::id());
     }
 
     public function replies()

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\Reactable;
+use App\Traits\HasReactions;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
@@ -19,12 +18,13 @@ use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
  * @property-read int $id
  * @property-read string $body
  * @property-read int $user_id
+ * @property-read int $reaction_count
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
  */
-final class Post extends Model implements HasMedia
+final class Post extends Model implements HasMedia, Reactable
 {
-    use InteractsWithMedia;
+    use HasReactions, InteractsWithMedia;
 
     protected $fillable = [
         'body',
@@ -32,26 +32,21 @@ final class Post extends Model implements HasMedia
         'updated_at',
     ];
 
+    protected $appends = ['reaction_count'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function reactions(): MorphMany
-    {
-        return $this->morphMany(Reaction::class, 'reactable', 'object_type', 'object_id');
-    }
-
-    public function reactionByCurrentUser(): HasOne
-    {
-        return $this->hasOne(Reaction::class, 'object_id')
-            ->where('object_type', self::class)
-            ->where('user_id', Auth::id());
-    }
-
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function attachments(): MediaCollection
+    {
+        return $this->getMedia('attachments');
     }
 
     public function registerMediaCollections(): void
@@ -66,10 +61,5 @@ final class Post extends Model implements HasMedia
                 'application/vnd.ms-excel',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ]);
-    }
-
-    public function attachments(): MediaCollection
-    {
-        return $this->getMedia('attachments');
     }
 }

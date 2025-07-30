@@ -44,7 +44,7 @@ final class CommentResource extends JsonResource
             'can' => [
                 'update' => Gate::allows('update', $comment),
                 'delete' => Gate::allows('delete', $comment),
-            ]
+            ],
         ];
     }
 }

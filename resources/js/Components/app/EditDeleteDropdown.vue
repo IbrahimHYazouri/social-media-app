@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import {Post} from "@/types/post";
-import {usePage} from "@inertiajs/vue3";
 import {EllipsisVerticalIcon, PencilIcon, TrashIcon} from "@heroicons/vue/20/solid/index.js";
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
 import {computed} from "vue";
-import {User} from "@/types";
 import {Comment} from "@/types/comment";
 
 const props = defineProps<{
@@ -17,11 +15,8 @@ defineEmits<{
     (e: 'delete'): void
 }>()
 
-const authUser = usePage().props.auth.user;
-const owner = computed<User>(() => props.post?.user || props.comment?.user);
-
-const editAllowed = computed(() => owner.value.id === authUser.id);
-const deleteAllowed = computed(() => owner.value.id === authUser.id);
+const canUpdate = computed(() => props.post?.can.update ?? props.comment?.can.update);
+const canDelete = computed(() => props.post?.can.delete ?? props.comment?.can.delete);
 </script>
 
 <template>
@@ -47,11 +42,10 @@ const deleteAllowed = computed(() => owner.value.id === authUser.id);
             leave-to-class="transform scale-95 opacity-0"
         >
             <MenuItems
-                v-if="authUser"
                 class="absolute z-20 right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
             >
                 <div class="px-1 py-1">
-                    <MenuItem v-if="editAllowed" v-slot="{ active }">
+                    <MenuItem v-if="canUpdate" v-slot="{ active }">
                         <button
                             @click="$emit('update')"
                             :class="[
@@ -65,7 +59,7 @@ const deleteAllowed = computed(() => owner.value.id === authUser.id);
                             Edit
                         </button>
                     </MenuItem>
-                    <MenuItem v-if="deleteAllowed" v-slot="{ active }">
+                    <MenuItem v-if="canDelete" v-slot="{ active }">
                         <button
                             @click="$emit('delete')"
                             :class="[

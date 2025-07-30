@@ -10,7 +10,9 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 final class CommentController extends Controller
 {
@@ -43,15 +45,17 @@ final class CommentController extends Controller
         return response(CommentResource::make($comment), 201);
     }
 
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment): CommentResource
     {
+        Gate::authorize('update', $comment);
         $comment->update($request->validated());
 
         return CommentResource::make($comment);
     }
 
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment): Response
     {
+        Gate::authorize('delete', $comment);
         $comment->delete();
 
         return response()->noContent();

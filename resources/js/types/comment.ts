@@ -12,4 +12,8 @@ export interface Comment {
     num_of_replies?: number;
     depth: number;
     user?: User;
+    can: {
+        update: boolean;
+        delete: boolean;
+    };
 }

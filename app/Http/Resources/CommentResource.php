@@ -8,6 +8,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 final class CommentResource extends JsonResource
 {
@@ -40,6 +41,10 @@ final class CommentResource extends JsonResource
                 'username' => $comment->user->username,
                 'avatar_url' => $comment->user->getAvatarThumbUrlAttribute(),
             ],
+            'can' => [
+                'update' => Gate::allows('update', $comment),
+                'delete' => Gate::allows('delete', $comment),
+            ]
         ];
     }
 }

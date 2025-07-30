@@ -38,7 +38,7 @@ final class PostResource extends JsonResource
             'can' => [
                 'update' => Gate::allows('update', $post),
                 'delete' => Gate::allows('delete', $post),
-            ]
+            ],
         ];
     }
 }

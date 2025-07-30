@@ -26,7 +26,7 @@ final class HomeController extends Controller
             'reactions' => function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             },
-            'comments' => function ($query) use ($userId) {
+            'comments' => function ($query) {
                 $query->whereNull('parent_id')
                     ->with([
                         'user',
@@ -38,11 +38,11 @@ final class HomeController extends Controller
                                 'user',
                                 'reactions' => function ($reactionQuery) {
                                     $reactionQuery->where('user_id', Auth::id());
-                                }
+                                },
                             ]);
                         },
                     ]);
-            }
+            },
         ])
             ->latest()
             ->paginate(20);

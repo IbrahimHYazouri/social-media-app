@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "Social Media app",
+    "name": "ibrahim/social-media",
     "type": "project",
     "description": "A simple social media based app, with post, group, user support",
     "keywords": [

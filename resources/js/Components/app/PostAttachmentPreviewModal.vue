@@ -8,6 +8,7 @@ import {
 } from '@headlessui/vue'
 import {XMarkIcon, PaperClipIcon, ChevronLeftIcon, ChevronRightIcon} from '@heroicons/vue/24/solid'
 import {ref} from "vue";
+import {ArrowDownTrayIcon} from "@heroicons/vue/24/outline";
 
 const props = defineProps<{
     attachments: Attachment[],
@@ -68,6 +69,7 @@ const next = () => {
                                     class="absolute right-3 top-3 w-10 h-10 rounded-full hover:bg-black/10 transition flex items-center justify-center text-gray-100 z-40">
                                 <XMarkIcon class="w-6 h-6 "/>
                             </button>
+
                             <div class="relative group h-full ">
                                 <div
                                     @click="previous"
@@ -80,7 +82,13 @@ const next = () => {
                                     <ChevronRightIcon class="w-12"/>
                                 </div>
 
-                                <div class="flex items-center justify-center w-full h-full p-3">
+                                <div class="flex items-center justify-center w-full h-full p-3 relative">
+                                    <a
+                                        @click.stop
+                                        :href="route('attachments.download', attachments[currentIndex].id)"
+                                        class="z-50 transition-all size-8 flex items-center justify-center text-gray-100 bg-gray-700 rounded absolute right-12 top-28 cursor-pointer hover:bg-gray-800">
+                                        <ArrowDownTrayIcon class="size-4"/>
+                                    </a>
                                     <img v-if="attachments[currentIndex].is_image"
                                          :src="attachments[currentIndex].preview_url"
                                          alt="attachment-preview"

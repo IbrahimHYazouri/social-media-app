@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileImageController;
@@ -17,6 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/images/{user}', [ProfileImageController::class, 'update'])->name('profile.images.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/attachments/{media}/download', [PostAttachmentController::class, 'download'])->name('attachments.download');
 
     Route::resource('posts', PostController::class);
     Route::resource('posts.comments', CommentController::class)

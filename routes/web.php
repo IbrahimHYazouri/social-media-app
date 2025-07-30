@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
@@ -30,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('posts/{post}/reactions', ReactionController::class)->name('posts.reactions');
     Route::post('comments/{comment}/reactions', ReactionController::class)->name('comments.reactions');
+
+    Route::resource('groups', GroupController::class);
 });
 
 require __DIR__.'/auth.php';

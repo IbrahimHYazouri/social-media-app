@@ -7,6 +7,7 @@ namespace App\Http\Resources;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 final class PostResource extends JsonResource
 {
@@ -28,8 +29,8 @@ final class PostResource extends JsonResource
             'body' => $post->body,
             'updated_at' => $post->updated_at->format('Y-m-d H:i:s'),
             'user' => UserResource::make($post->user),
-            'num_of_reactions' => $this->reactions_count,
-            'user_has_reacted' => $this->relationLoaded('reactionByCurrentUser') && $this->reactionByCurrentUser !== null,
+            'num_of_reactions' => $post->reaction_count,
+            'user_has_reacted' => $post->hasReactionFromUser(Auth::id()),
             'attachments' => PostAttachmentResource::collection($post->attachments()),
             'comments' => CommentResource::collection($comments),
             'num_of_comments' => count($comments),

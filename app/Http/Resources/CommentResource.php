@@ -7,6 +7,7 @@ namespace App\Http\Resources;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 final class CommentResource extends JsonResource
 {
@@ -27,9 +28,9 @@ final class CommentResource extends JsonResource
             'comment' => $comment->comment,
             'post_id' => $comment->post_id,
             'user_id' => $comment->user_id,
-            'depth' => $this->depth,
-            'num_of_reactions' => $this->reactions_count,
-            'user_has_reacted' => $this->relationLoaded('reactionByCurrentUser') && $this->reactionByCurrentUser !== null,
+            'depth' => $comment->depth,
+            'num_of_reactions' => $comment->reaction_count,
+            'user_has_reacted' => $comment->hasReactionFromUser(Auth::id()),
             'updated_at' => $comment->updated_at->format('Y-m-d H:i:s'),
             'replies' => self::collection($this->whenLoaded('replies')),
             'num_of_replies' => $this->replies->count(),

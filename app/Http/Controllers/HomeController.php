@@ -8,6 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,22 +19,33 @@ final class HomeController extends Controller
      */
     public function __invoke(Request $request): Response
     {
-        $posts = Post::withCount('reactions')
-            ->with([
-                'user',
-                'reactionByCurrentUser',
-                'comments' => function ($query) {
-                    $query->whereNull('parent_id')
-                        ->withCount('reactions')
-                        ->with([
-                            'user',
-                            'reactionByCurrentUser',
-                            'replies' => function ($q) {
-                                $q->with('user', 'reactionByCurrentUser')->withCount('reactions');
-                            },
-                        ]);
-                },
-            ])->paginate(20);
+        $userId = Auth::id();
+
+        $posts = Post::with([
+            'user',
+            'reactions' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            },
+            'comments' => function ($query) use ($userId) {
+                $query->whereNull('parent_id')
+                    ->with([
+                        'user',
+                        'reactions' => function ($q) {
+                            $q->where('user_id', Auth::id());
+                        },
+                        'replies' => function ($q) {
+                            $q->with([
+                                'user',
+                                'reactions' => function ($reactionQuery) {
+                                    $reactionQuery->where('user_id', Auth::id());
+                                }
+                            ]);
+                        },
+                    ]);
+            }
+        ])
+            ->latest()
+            ->paginate(20);
 
         return Inertia::render('Home', [
             'feed' => PostResource::collection($posts),

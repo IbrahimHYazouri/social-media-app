@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 125);
             $table->string('slug', 125);
-            $table->boolean('auth_approval')->default(true);
+            $table->boolean('auto_approval')->default(true);
             $table->string('about', 255)->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

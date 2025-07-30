@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 final class PostController extends Controller
 {
@@ -26,6 +27,7 @@ final class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
+        Gate::authorize('update', $post);
         $this->postService->updatePostWithAttachments($post, $request->validated());
 
         return redirect()->route('dashboard')->with('success', 'Post updated');
@@ -33,6 +35,7 @@ final class PostController extends Controller
 
     public function destroy(Post $post): RedirectResponse
     {
+        Gate::authorize('delete', $post);
         $post->delete();
 
         return redirect()->route('dashboard')->with('success', 'Post deleted');

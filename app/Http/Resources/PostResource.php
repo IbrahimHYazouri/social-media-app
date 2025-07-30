@@ -8,6 +8,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 final class PostResource extends JsonResource
 {
@@ -34,6 +35,10 @@ final class PostResource extends JsonResource
             'attachments' => PostAttachmentResource::collection($post->attachments()),
             'comments' => CommentResource::collection($comments),
             'num_of_comments' => count($comments),
+            'can' => [
+                'update' => Gate::allows('update', $post),
+                'delete' => Gate::allows('delete', $post),
+            ]
         ];
     }
 }

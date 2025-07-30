@@ -12,5 +12,9 @@ export interface Post {
     num_of_comments: number;
     user_has_reacted: boolean;
     comments: Comment[]
-    attachments: Attachment[]
+    attachments: Attachment[],
+    can: {
+        update: boolean;
+        delete: boolean;
+    };
 }

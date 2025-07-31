@@ -8,6 +8,8 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -21,9 +23,9 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
  */
-final class Group extends Model
+final class Group extends Model implements HasMedia
 {
-    use HasSlug;
+    use HasSlug, InteractsWithMedia;
 
     protected $fillable = [
         'name', 'user_id', 'auto_approval', 'about',
@@ -35,6 +37,35 @@ final class Group extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('avatar')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
+        $this
+            ->addMediaCollection('cover')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    /**
+     * Get avatar thumbnail URL
+     */
+    public function getAvatarThumbUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('avatar');
+    }
+
+    /**
+     * Get cover URL
+     */
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('cover');
     }
 
     public function getRouteKeyName(): string

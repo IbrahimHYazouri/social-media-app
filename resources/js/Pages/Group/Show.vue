@@ -6,18 +6,22 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 import TabItem from "@/Components/TabItem.vue";
 import {ref} from "vue";
-import {useForm} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 
-defineProps<{
-    group: Group
+const props = defineProps<{
+    group: {
+        data: Group
+    }
 }>()
 
 const form = useForm<{
     avatar_path: File | null;
     cover_path: File | null;
+    _method: string
 }>({
     avatar_path: null,
     cover_path: null,
+    _method: 'PATCH'
 });
 
 const coverImageSrc = ref<string>('');
@@ -48,15 +52,32 @@ const onAvatarImageChange = (e: Event) => {
         reader.readAsDataURL(form.avatar_path);
     }
 }
+
+const reset = () => {
+    form.cover_path = null;
+    form.cover_path = null;
+    coverImageSrc.value = '';
+    avatarImageSrc.value = '';
+}
+
+const submit = () => {
+    form.post(route('groups.images.update', props.group.data.slug), {
+        onSuccess: () => {
+            reset();
+        }
+    })
+}
 </script>
 
 <template>
+    <Head title="Group Profile"/>
+
     <AuthenticatedLayout>
         <div class="max-w-[1100px] mx-auto h-full overflow-auto">
             <div class="px-4">
                 <div class="group relative bg-white dark:bg-slate-950 dark:text-gray-100">
                     <img
-                        :src="coverImageSrc || '/img/default_cover.jpg'"
+                        :src="group.data.cover_url || coverImageSrc || '/img/default_cover.jpg'"
                         alt="group-cover"
                         class="w-full h-[200px] object-cover"
                     />
@@ -84,6 +105,7 @@ const onAvatarImageChange = (e: Event) => {
                                 Cancel
                             </button>
                             <button
+                                @click="submit"
                                 class="bg-gray-800 hover:bg-gray-900 text-gray-100 py-1 px-2 text-xs flex items-center">
                                 <CheckCircleIcon class="h-3 w-3 mr-2"/>
                                 Submit
@@ -93,7 +115,7 @@ const onAvatarImageChange = (e: Event) => {
 
                     <div class="flex">
                         <div  class="flex items-center justify-center relative group/thumbnail -mt-[64px] ml-[48px] w-[128px] h-[128px] rounded-full">
-                            <img :src="avatarImageSrc || '/img/no_image.png'"
+                            <img :src="group.data.avatar_url || avatarImageSrc || '/img/no_image.png'"
                                  alt="avatar-image"
                                  class="w-full h-full object-cover rounded-full">
                             <button
@@ -111,6 +133,7 @@ const onAvatarImageChange = (e: Event) => {
                                     <XMarkIcon class="h-5 w-5"/>
                                 </button>
                                 <button
+                                    @click="submit"
                                     class="w-7 h-7 flex items-center justify-center bg-emerald-500/80 text-white rounded-full">
                                     <CheckCircleIcon class="h-5 w-5"/>
                                 </button>
@@ -118,7 +141,7 @@ const onAvatarImageChange = (e: Event) => {
                         </div>
 
                         <div class="flex justify-between items-center flex-1 p-4">
-                            <h2 class="font-bold text-lg">{{ group.name }}</h2>
+                            <h2 class="font-bold text-lg">{{ group.data.name }}</h2>
 
                             <PrimaryButton>Join To Group</PrimaryButton>
                         </div>

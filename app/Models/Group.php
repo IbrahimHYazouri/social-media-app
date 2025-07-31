@@ -37,6 +37,11 @@ final class Group extends Model
             ->doNotGenerateSlugsOnUpdate();
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function authUserMembership(): HasOne
     {
         return $this->hasOne(GroupUser::class)->where('user_id', Auth::id());

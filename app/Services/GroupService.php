@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Enums\GroupUserRoleEnum;
+use App\Enums\GroupUserStatusEnum;
+use App\Models\Group;
+use App\Models\GroupUser;
+use Illuminate\Support\Facades\DB;
+
+final class GroupService
+{
+    public function createGroupWithAdmin(array $data, int $userId): Group
+    {
+        return DB::transaction(function () use ($data, $userId) {
+            $data['user_id'] = $userId;
+            $group = Group::create($data);
+
+            GroupUser::create([
+                'status' => GroupUserStatusEnum::APPROVED,
+                'role' => GroupUserRoleEnum::ADMIN,
+                'user_id' => $userId,
+                'group_id' => $group->id,
+                'owner_id' => $group->user_id,
+            ]);
+
+            return $group;
+        });
+    }
+}

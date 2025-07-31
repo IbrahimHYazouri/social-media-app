@@ -7,13 +7,15 @@ import Checkbox from "@/Components/Checkbox.vue";
 import axios from "axios";
 import InputError from "@/Components/InputError.vue";
 import {ref} from "vue";
+import {Group} from "@/types/group";
 
 defineProps<{
     show: boolean
 }>()
 
 const emit = defineEmits<{
-    (e: 'close'): void
+    (e: 'close'): void,
+    (e: 'store', group: Group): void
 }>()
 
 const form = useForm({
@@ -27,7 +29,8 @@ const loading = ref(false);
 const submit = () => {
     loading.value = true;
     axios.post(route('groups.store'), form)
-        .then((_) => {
+        .then(({data}) => {
+            emit('store', data)
             emit('close')
         })
         .catch((error) => {

@@ -29,6 +29,8 @@ final class GroupResource extends JsonResource
             'auto_approval' => $group->auto_approval,
             'about' => $group->about,
             'user_id' => $group->user_id,
+            'role' => $group->pivot?->role,
+            'status' => $group->pivot?->status,
             'created_at' => $group->created_at,
             'updated_at' => $group->updated_at,
         ];

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -19,6 +21,10 @@ final class HomeController extends Controller
      */
     public function __invoke(Request $request): Response
     {
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
         $userId = Auth::id();
 
         $posts = Post::with([
@@ -47,8 +53,16 @@ final class HomeController extends Controller
             ->latest()
             ->paginate(20);
 
+        $groups = $user
+            ->groups()
+            ->with('authUserMembership')
+            ->orderByPivot('role')
+            ->orderBy('name', 'desc')
+            ->get();
+
         return Inertia::render('Home', [
             'feed' => PostResource::collection($posts),
+            'groups' => GroupResource::collection($groups),
             'allowed_attachment_extensions' => StorePostRequest::$extensions,
         ]);
     }

@@ -18,13 +18,15 @@ final class GroupService
             $data['user_id'] = $userId;
             $group = Group::create($data);
 
-            GroupUser::create([
+            $groupUser = GroupUser::create([
                 'status' => GroupUserStatusEnum::APPROVED,
                 'role' => GroupUserRoleEnum::ADMIN,
                 'user_id' => $userId,
                 'group_id' => $group->id,
                 'owner_id' => $group->user_id,
             ]);
+            
+            $group->setRelation('pivot', $groupUser);
 
             return $group;
         });

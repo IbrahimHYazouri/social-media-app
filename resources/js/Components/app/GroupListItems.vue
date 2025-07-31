@@ -3,9 +3,18 @@ import {ref} from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import GroupItem from "@/Components/app/GroupItem.vue";
 import GroupModal from "@/Components/app/GroupModal.vue";
+import {Group} from "@/types/group";
 
 const searchKeyword = ref('');
 const showGroupModal = ref(false);
+
+const props = defineProps<{
+    groups: Group[]
+}>()
+
+const store = (group: Group): void => {
+    props.groups.unshift(group)
+}
 </script>
 
 <template>
@@ -22,12 +31,13 @@ const showGroupModal = ref(false);
             You are not joined to any groups
         </div>
         <div v-else>
-            <GroupItem />
-            <GroupItem />
-            <GroupItem />
-            <GroupItem />
+            <GroupItem v-for="group in groups" :group="group"/>
         </div>
     </div>
 
-    <GroupModal :show="showGroupModal" @close="showGroupModal = false"/>
+    <GroupModal
+        :show="showGroupModal"
+        @close="showGroupModal = false"
+        @store="store"
+    />
 </template>

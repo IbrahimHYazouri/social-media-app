@@ -5,6 +5,8 @@ import TextInput from "@/Components/TextInput.vue";
 import {useForm} from "@inertiajs/vue3";
 import Checkbox from "@/Components/Checkbox.vue";
 import axios from "axios";
+import InputError from "@/Components/InputError.vue";
+import {ref} from "vue";
 
 defineProps<{
     show: boolean
@@ -20,10 +22,21 @@ const form = useForm({
     about: '',
 })
 
+const loading = ref(false);
+
 const submit = () => {
+    loading.value = true;
     axios.post(route('groups.store'), form)
         .then((_) => {
             emit('close')
+        })
+        .catch((error) => {
+            if (error.response && error.response.status === 422) {
+                form.errors = error.response.data.errors;
+            }
+        })
+        .finally(() => {
+            loading.value = false;
         })
 }
 </script>
@@ -39,6 +52,8 @@ const submit = () => {
                     class="mt-1 block w-full"
                     autofocus
                 />
+
+                <InputError class="mt-1" :message="form.errors.name ? form.errors.name[0] : ''"/>
             </div>
 
             <div>
@@ -66,8 +81,9 @@ const submit = () => {
             </button>
             <button
                 @click="submit"
+                :disabled="loading"
                 type="button"
-                class="flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                class="flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-25 disabled:cursor-not-allowed"
             >
                 <BookmarkIcon class="size-4 mr-2"/>
                 Submit

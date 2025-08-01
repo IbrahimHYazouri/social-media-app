@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 final class GroupResource extends JsonResource
 {
@@ -21,6 +23,10 @@ final class GroupResource extends JsonResource
          * @var Group $group
          */
         $group = $this->resource;
+        $role = $group->pivot?->role;
+        $status = $group->pivot?->status;
+        $isOwner = $group->user_id === Auth::id();
+        $isMember = ! is_null($role) && $status === GroupUserStatusEnum::APPROVED->value;
 
         return [
             'id' => $group->id,
@@ -35,6 +41,11 @@ final class GroupResource extends JsonResource
             'avatar_url' => $group->getAvatarThumbUrlAttribute(),
             'created_at' => $group->created_at,
             'updated_at' => $group->updated_at,
+            'can' => [
+                'manage' => $isOwner,
+                'participate' => $isMember,
+                'join' => Auth::check() && ! $isMember,
+            ],
         ];
     }
 }

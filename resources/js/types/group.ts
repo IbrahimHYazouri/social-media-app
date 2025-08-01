@@ -11,4 +11,9 @@ export interface Group {
     cover_url ?: string;
     created_at: string;
     updated_at: string;
+    can: {
+        manage: boolean,
+        participate: boolean,
+        join: boolean
+    }
 }

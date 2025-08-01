@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\GroupImageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
@@ -17,7 +18,7 @@ Route::get('/', HomeController::class)->middleware(['auth', 'verified'])->name('
 Route::middleware('auth')->group(function () {
     Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/profile/images/{user}', [ProfileImageController::class, 'update'])->name('profile.images.update');
+    Route::patch('/profile/images/{user}', ProfileImageController::class)->name('profile.images.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/attachments/{media}/download', [PostAttachmentController::class, 'download'])->name('attachments.download');
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('comments/{comment}/reactions', ReactionController::class)->name('comments.reactions');
 
     Route::resource('groups', GroupController::class);
+    Route::patch('/groups/images/{group}', GroupImageController::class)->name('groups.images.update');
 });
 
 require __DIR__.'/auth.php';

@@ -31,6 +31,8 @@ final class GroupResource extends JsonResource
             'user_id' => $group->user_id,
             'role' => $group->pivot?->role,
             'status' => $group->pivot?->status,
+            'cover_url' => $group->getCoverUrlAttribute(),
+            'avatar_url' => $group->getAvatarThumbUrlAttribute(),
             'created_at' => $group->created_at,
             'updated_at' => $group->updated_at,
         ];

@@ -6,31 +6,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProfileImageRequest;
 use App\Models\User;
+use App\Services\MediaUploadService;
 
 final class ProfileImageController extends Controller
 {
-    public function update(UpdateProfileImageRequest $request, User $user)
+    public function __invoke(UpdateProfileImageRequest $request, User $user, MediaUploadService $uploader): void
     {
-        if ($request->hasFile('avatar_path')) {
-            $newAvatar = $request->file('avatar_path')->getClientOriginalName();
-            $oldAvatar = $user->getFirstMedia('avatar');
-
-            if (! $oldAvatar || $oldAvatar !== $newAvatar) {
-                $user->clearMediaCollection('avatar');
-                $user
-                    ->addMediaFromRequest('avatar_path')
-                    ->toMediaCollection('avatar', 'public');
-            }
+        if ($file = $request->file('avatar_path')) {
+            $uploader->upload($user, 'avatar', $file);
         }
 
-        if ($request->hasFile('cover_path')) {
-            $newCover = $request->file('cover_path')->getClientOriginalName();
-
-            $oldCover = $user->getFirstMedia('cover');
-            if (! $oldCover || $oldCover->file_name !== $newCover) {
-                $user->clearMediaCollection('cover');
-                $user->addMediaFromRequest('cover_path')->toMediaCollection('cover', 'public');
-            }
+        if ($file = $request->file('cover_path')) {
+            $uploader->upload($user, 'cover', $file);
         }
     }
 }

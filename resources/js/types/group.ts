@@ -7,6 +7,8 @@ export interface Group {
     user_id: number;
     role: string;
     status: string;
+    avatar_url ?: string;
+    cover_url ?: string;
     created_at: string;
     updated_at: string;
 }

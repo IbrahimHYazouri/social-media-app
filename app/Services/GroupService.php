@@ -25,7 +25,7 @@ final class GroupService
                 'group_id' => $group->id,
                 'owner_id' => $group->user_id,
             ]);
-            
+
             $group->setRelation('pivot', $groupUser);
 
             return $group;

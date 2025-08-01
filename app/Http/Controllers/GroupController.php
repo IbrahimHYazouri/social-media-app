@@ -23,6 +23,10 @@ final class GroupController extends Controller
     {
         $group->load('authUserMembership');
 
+        if ($group->authUserMembership) {
+            $group->setRelation('pivot', $group->authUserMembership);
+        }
+
         return Inertia::render('Group/Show', [
             'group' => GroupResource::make($group),
         ]);

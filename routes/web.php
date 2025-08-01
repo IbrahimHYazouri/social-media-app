@@ -6,6 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupImageController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InviteUserController;
 use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('groups', GroupController::class);
     Route::patch('/groups/images/{group}', GroupImageController::class)->name('groups.images.update');
+    Route::post('groups/{group}/invite', InviteUserController::class)->name('groups.invite');
 });
 
 require __DIR__.'/auth.php';

@@ -38,6 +38,8 @@ final class InviteUserController extends Controller
             'owner_id' => Auth::id(),
         ]);
 
+        // TODO handle notifying the invited user
+
         return Inertia::render('Group/Show', [
             'success' => __('Invitation send to :email', [
                 'email' => $invitee->email,

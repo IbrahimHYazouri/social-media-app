@@ -70,11 +70,21 @@ const submit = () => {
         }
     })
 }
+
+const join = () => {
+    if (props.group.data.status === 'pending') {
+        return;
+    }
+
+    const form = useForm({});
+
+    form.post(route('groups.join', props.group.data.slug), {
+        preserveScroll: true
+    })
+}
 </script>
 
 <template>
-    <Head title="Group Profile"/>
-
     <AuthenticatedLayout>
         <div class="max-w-[1100px] mx-auto h-full overflow-auto">
             <div class="px-4">
@@ -152,7 +162,18 @@ const submit = () => {
                                 Invite Users
                             </PrimaryButton>
 
-                            <PrimaryButton v-else-if="group.data.can.join">
+                            <span
+                                v-if="group.data.status === 'pending'"
+                                class="text-sm italic text-gray-500"
+                            >
+                            Pending approval…
+                          </span>
+
+                            <PrimaryButton
+                                v-else-if="group.data.can.join"
+                                @click="join"
+                                :class="{'disabled:opacity-25 disabled:cursor-not-allowed': group.data.status === 'pending'}"
+                            >
                                 {{ group.data.auto_approval ? 'Join' : 'Request to join' }}
                             </PrimaryButton>
                         </div>
@@ -201,6 +222,8 @@ const submit = () => {
             </div>
         </div>
     </AuthenticatedLayout>
+
+    <Head title="Group Profile"/>
 
     <InviteUserToGroupModal
         :group="group.data"

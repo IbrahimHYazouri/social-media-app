@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\GroupUserResource;
+use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Services\GroupService;
 use Illuminate\Support\Facades\Auth;
@@ -27,8 +29,11 @@ final class GroupController extends Controller
             $group->setRelation('pivot', $group->authUserMembership);
         }
 
+        $pending = $group->pendingUsers()->get();
+
         return Inertia::render('Group/Show', [
             'group' => GroupResource::make($group),
+            'pending' => UserResource::collection($pending)
         ]);
     }
 

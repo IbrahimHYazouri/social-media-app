@@ -8,10 +8,15 @@ import TabItem from "@/Components/TabItem.vue";
 import {ref} from "vue";
 import {Head, useForm} from "@inertiajs/vue3";
 import InviteUserToGroupModal from "@/Components/app/InviteUserToGroupModal.vue";
+import {User} from "@/types";
+import UserListItem from "@/Components/app/UserListItem.vue";
 
 const props = defineProps<{
     group: {
         data: Group
+    },
+    pending: {
+        data: User[]
     }
 }>()
 
@@ -209,7 +214,13 @@ const join = () => {
                             Joined users
                         </TabPanel>
                         <TabPanel>
-                            Pending Users
+                            <div v-if="pending.data.length" class="grid grid-cols-2 gap-3">
+                                <UserListItem
+                                    v-for="user in pending.data"
+                                    :user="user"
+                                    class="rounded-lg"
+                                />
+                            </div>
                         </TabPanel>
                         <TabPanel>
                             Photos

@@ -17,7 +17,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read int $id
  * @property-read string $name
  * @property-read string $slug
- * @property-read bool $auth_approval
+ * @property-read bool $auto_approval
  * @property-read string $about
  * @property-read int $user_id
  * @property-read DateTimeInterface $created_at

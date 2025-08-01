@@ -7,6 +7,7 @@ import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 import TabItem from "@/Components/TabItem.vue";
 import {ref} from "vue";
 import {Head, useForm} from "@inertiajs/vue3";
+import InviteUserToGroupModal from "@/Components/app/InviteUserToGroupModal.vue";
 
 const props = defineProps<{
     group: {
@@ -26,6 +27,8 @@ const form = useForm<{
 
 const coverImageSrc = ref<string>('');
 const avatarImageSrc = ref<string>('');
+
+const showInviteUserModal = ref(false);
 
 const onCoverImageChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -81,7 +84,7 @@ const submit = () => {
                         alt="group-cover"
                         class="w-full h-[200px] object-cover"
                     />
-                    <div class="absolute top-2 right-2">
+                    <div v-if="group.data.can.manage" class="absolute top-2 right-2">
                         <button
                             v-if="!coverImageSrc"
                             class="bg-gray-50 hover:bg-gray-100 text-gray-800 py-1 px-2 text-xs flex items-center opacity-0 group-hover:opacity-100">
@@ -119,14 +122,14 @@ const submit = () => {
                                  alt="avatar-image"
                                  class="w-full h-full object-cover rounded-full">
                             <button
-                                v-if="!avatarImageSrc"
+                                v-if="group.data.can.manage && !avatarImageSrc"
                                 class="absolute left-0 top-0 right-0 bottom-0 bg-black/50 text-gray-200 rounded-full opacity-0 flex items-center justify-center group-hover/thumbnail:opacity-100">
                                 <CameraIcon class="w-8 h-8"/>
 
                                 <input @change="onAvatarImageChange" type="file" class="absolute left-0 top-0 bottom-0 right-0 opacity-0"/>
                             </button>
 
-                            <div v-else class="absolute top-1 right-0 flex flex-col gap-2">
+                            <div v-else-if="group.data.can.manage" class="absolute top-1 right-0 flex flex-col gap-2">
                                 <button
                                     @click="avatarImageSrc = ''"
                                     class="w-7 h-7 flex items-center justify-center bg-red-500/80 text-white rounded-full">
@@ -142,8 +145,16 @@ const submit = () => {
 
                         <div class="flex justify-between items-center flex-1 p-4">
                             <h2 class="font-bold text-lg">{{ group.data.name }}</h2>
+                            <PrimaryButton
+                                v-if="group.data.can.manage"
+                                @click="showInviteUserModal = true"
+                            >
+                                Invite Users
+                            </PrimaryButton>
 
-                            <PrimaryButton>Join To Group</PrimaryButton>
+                            <PrimaryButton v-else-if="group.data.can.join">
+                                {{ group.data.auto_approval ? 'Join' : 'Request to join' }}
+                            </PrimaryButton>
                         </div>
                     </div>
                 </div>
@@ -190,4 +201,10 @@ const submit = () => {
             </div>
         </div>
     </AuthenticatedLayout>
+
+    <InviteUserToGroupModal
+        :group="group.data"
+        :show="showInviteUserModal"
+        @close="showInviteUserModal = false"
+    />
 </template>

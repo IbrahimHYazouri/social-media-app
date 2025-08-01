@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\GroupUserStatusEnum;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
@@ -76,5 +78,11 @@ final class Group extends Model implements HasMedia
     public function authUserMembership(): HasOne
     {
         return $this->hasOne(GroupUser::class)->where('user_id', Auth::id());
+    }
+
+    public function pendingUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivot('status', GroupUserStatusEnum::PENDING->value);
     }
 }

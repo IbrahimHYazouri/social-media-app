@@ -7,8 +7,8 @@ defineProps<{
 }>()
 
 defineEmits<{
-    (e: 'approve'): void,
-    (e: 'reject'): void
+    (e: 'approve', user: User): void,
+    (e: 'reject', user: User): void
 }>()
 </script>
 
@@ -28,11 +28,11 @@ defineEmits<{
                 </Link>
                 <div class="flex gap-1">
                     <button class="text-xs py-1 px-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white"
-                            @click.prevent.stop="$emit('approve', user)">
+                            @click="$emit('approve', user)">
                         Approve
                     </button>
                     <button class="text-xs py-1 px-2 rounded bg-red-500 hover:bg-red-600 text-white"
-                            @click.prevent.stop="$emit('reject', user)">
+                            @click="$emit('reject', user)">
                         Reject
                     </button>
                 </div>

@@ -27,7 +27,7 @@ const props = defineProps<{
                 <GroupList :groups="groups.data"/>
             </div>
             <div class="lg:col-span-3 lg:order-3 h-full overflow-hidden">
-                <FollowingList />
+<!--                <FollowingList />-->
             </div>
             <div class="lg:col-span-6 lg:order-2 h-full overflow-hidden flex flex-col">
                 <CreatePost />

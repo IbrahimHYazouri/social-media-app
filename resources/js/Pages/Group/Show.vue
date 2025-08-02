@@ -88,14 +88,21 @@ const join = () => {
     })
 }
 
-const accept = () => {
-    const form = useForm({});
+const response = (user: User, action: 'approve' | 'reject') => {
+    const form = useForm({
+        user_id: user.id,
+        action: action
+    });
 
-
+    form.post(route('groups.approve', props.group.data.slug), {
+        preserveScroll: true
+    })
 }
 </script>
 
 <template>
+    <Head title="Group Profile"/>
+
     <AuthenticatedLayout>
         <div class="max-w-[1100px] mx-auto h-full overflow-auto">
             <div class="px-4">
@@ -229,6 +236,8 @@ const accept = () => {
                                     v-for="user in pending.data"
                                     :user="user"
                                     class="rounded-lg"
+                                    @approve="response(user, 'approve')"
+                                    @reject="response(user, 'reject')"
                                 />
                             </div>
                         </TabPanel>
@@ -243,8 +252,6 @@ const accept = () => {
             </div>
         </div>
     </AuthenticatedLayout>
-
-    <Head title="Group Profile"/>
 
     <InviteUserToGroupModal
         :group="group.data"

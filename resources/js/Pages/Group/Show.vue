@@ -15,6 +15,9 @@ const props = defineProps<{
     group: {
         data: Group
     },
+    users: {
+        data: User[]
+    },
     pending: {
         data: User[]
     }
@@ -228,7 +231,12 @@ const response = (user: User, action: 'approve' | 'reject') => {
                             Posts
                         </TabPanel>
                         <TabPanel>
-                            Joined users
+                            <UserListItem
+                                v-for="user in users.data"
+                                :user="user"
+                                class="rounded-lg"
+                                :show-approval-actions="false"
+                            />
                         </TabPanel>
                         <TabPanel v-if="group.data.can.manage">
                             <div v-if="pending.data.length" class="grid grid-cols-2 gap-3">
@@ -236,6 +244,7 @@ const response = (user: User, action: 'approve' | 'reject') => {
                                     v-for="user in pending.data"
                                     :user="user"
                                     class="rounded-lg"
+                                    :show-approval-actions="true"
                                     @approve="response(user, 'approve')"
                                     @reject="response(user, 'reject')"
                                 />

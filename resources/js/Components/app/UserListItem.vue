@@ -3,7 +3,8 @@ import {Link} from "@inertiajs/vue3"
 import {User} from "@/types";
 
 defineProps<{
-    user: User
+    user: User,
+    showApprovalActions: boolean
 }>()
 
 defineEmits<{
@@ -26,7 +27,7 @@ defineEmits<{
                 <Link :href="route('profile.show', user.username)">
                     <h3 class="font-black hover:underline">{{ user.name }}</h3>
                 </Link>
-                <div class="flex gap-1">
+                <div v-if="showApprovalActions" class="flex gap-1">
                     <button class="text-xs py-1 px-2 rounded bg-emerald-500 hover:bg-emerald-600 text-white"
                             @click="$emit('approve', user)">
                         Approve

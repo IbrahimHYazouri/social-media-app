@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GroupUserResource extends JsonResource
+final class GroupUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,13 +17,13 @@ class GroupUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id" => $this->id,
-            "name" => $this->name,
+            'id' => $this->id,
+            'name' => $this->name,
             'role' => $this->role,
             'status' => $this->status,
             'group_id' => $this->group_id,
-            "username" => $this->username,
-            "avatar_url" => $this->avatar_path,
+            'username' => $this->username,
+            'avatar_url' => $this->avatar_path,
         ];
     }
 }

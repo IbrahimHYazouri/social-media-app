@@ -27,7 +27,7 @@ final class JoinGroupRequest extends FormRequest
             'user_id' => $user->id,
         ])->exists();
 
-        return $user && !$already;
+        return $user && ! $already;
     }
 
     /**

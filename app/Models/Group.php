@@ -80,6 +80,12 @@ final class Group extends Model implements HasMedia
         return $this->hasOne(GroupUser::class)->where('user_id', Auth::id());
     }
 
+    public function approvedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivot('status', GroupUserStatusEnum::APPROVED->value);
+    }
+
     public function pendingUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')

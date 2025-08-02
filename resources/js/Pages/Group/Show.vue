@@ -87,6 +87,12 @@ const join = () => {
         preserveScroll: true
     })
 }
+
+const accept = () => {
+    const form = useForm({});
+
+
+}
 </script>
 
 <template>
@@ -132,7 +138,8 @@ const join = () => {
                     </div>
 
                     <div class="flex">
-                        <div  class="flex items-center justify-center relative group/thumbnail -mt-[64px] ml-[48px] w-[128px] h-[128px] rounded-full">
+                        <div
+                            class="flex items-center justify-center relative group/thumbnail -mt-[64px] ml-[48px] w-[128px] h-[128px] rounded-full">
                             <img :src="group.data.avatar_url || avatarImageSrc || '/img/no_image.png'"
                                  alt="avatar-image"
                                  class="w-full h-full object-cover rounded-full">
@@ -141,7 +148,8 @@ const join = () => {
                                 class="absolute left-0 top-0 right-0 bottom-0 bg-black/50 text-gray-200 rounded-full opacity-0 flex items-center justify-center group-hover/thumbnail:opacity-100">
                                 <CameraIcon class="w-8 h-8"/>
 
-                                <input @change="onAvatarImageChange" type="file" class="absolute left-0 top-0 bottom-0 right-0 opacity-0"/>
+                                <input @change="onAvatarImageChange" type="file"
+                                       class="absolute left-0 top-0 bottom-0 right-0 opacity-0"/>
                             </button>
 
                             <div v-else-if="group.data.can.manage" class="absolute top-1 right-0 flex flex-col gap-2">
@@ -167,20 +175,22 @@ const join = () => {
                                 Invite Users
                             </PrimaryButton>
 
-                            <span
-                                v-if="group.data.status === 'pending'"
-                                class="text-sm italic text-gray-500"
-                            >
+                            <div v-else>
+                                <span
+                                    v-if="group.data.status === 'pending'"
+                                    class="text-sm italic text-gray-500"
+                                >
                             Pending approval…
                           </span>
 
-                            <PrimaryButton
-                                v-else-if="group.data.can.join"
-                                @click="join"
-                                :class="{'disabled:opacity-25 disabled:cursor-not-allowed': group.data.status === 'pending'}"
-                            >
-                                {{ group.data.auto_approval ? 'Join' : 'Request to join' }}
-                            </PrimaryButton>
+                                <PrimaryButton
+                                    v-else-if="group.data.can.join"
+                                    @click="join"
+                                    :class="{'disabled:opacity-25 disabled:cursor-not-allowed': group.data.status === 'pending'}"
+                                >
+                                    {{ group.data.auto_approval ? 'Join' : 'Request to join' }}
+                                </PrimaryButton>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -190,18 +200,18 @@ const join = () => {
                 <TabGroup>
                     <TabList class="flex bg-white dark:bg-slate-950 dark:text-white">
                         <Tab v-slot="{ selected }" as="template">
-                            <TabItem :selected="selected" text="Posts" />
+                            <TabItem :selected="selected" text="Posts"/>
                         </Tab>
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Users" :selected="selected"/>
                         </Tab>
-                        <Tab v-slot="{ selected }" as="template">
+                        <Tab v-if="group.data.can.manage" v-slot="{ selected }" as="template">
                             <TabItem text="Pending Requests" :selected="selected"/>
                         </Tab>
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Photos" :selected="selected"/>
                         </Tab>
-                        <Tab v-slot="{ selected }" as="template">
+                        <Tab v-if="group.data.can.manage" v-slot="{ selected }" as="template">
                             <TabItem text="About" :selected="selected"/>
                         </Tab>
                     </TabList>
@@ -213,7 +223,7 @@ const join = () => {
                         <TabPanel>
                             Joined users
                         </TabPanel>
-                        <TabPanel>
+                        <TabPanel v-if="group.data.can.manage">
                             <div v-if="pending.data.length" class="grid grid-cols-2 gap-3">
                                 <UserListItem
                                     v-for="user in pending.data"
@@ -225,7 +235,7 @@ const join = () => {
                         <TabPanel>
                             Photos
                         </TabPanel>
-                        <TabPanel>
+                        <TabPanel v-if="group.data.can.manage">
                             Update
                         </TabPanel>
                     </TabPanels>

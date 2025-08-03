@@ -89,6 +89,7 @@ final class Group extends Model implements HasMedia
     public function pendingUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivotNull('token')
             ->wherePivot('status', GroupUserStatusEnum::PENDING->value);
     }
 }

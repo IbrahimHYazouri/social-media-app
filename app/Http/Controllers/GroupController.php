@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Services\GroupService;
@@ -29,11 +30,11 @@ final class GroupController extends Controller
         }
 
         $pending = $group->pendingUsers()->get();
-        $users = $group->approvedUsers()->get();
+        $group->load('approvedUsers');
 
         return Inertia::render('Group/Show', [
             'group' => GroupResource::make($group),
-            'users' => UserResource::collection($users),
+            'users' => GroupUserResource::collection($group->approvedUsers),
             'pending' => UserResource::collection($pending),
         ]);
     }

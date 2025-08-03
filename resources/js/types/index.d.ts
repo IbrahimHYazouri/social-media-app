@@ -9,6 +9,8 @@ export interface User {
     password ?: string;
     cover_url ?: string;
     avatar_url ?: string;
+    status ?: string;
+    role ?: string;
 }
 
 export type PageProps<

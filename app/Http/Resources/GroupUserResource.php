@@ -19,9 +19,9 @@ final class GroupUserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'role' => $this->role,
-            'status' => $this->status,
-            'group_id' => $this->group_id,
+            'role' => $this->pivot->role,
+            'status' => $this->pivot->status,
+            'group_id' => $this->pivot->group_id,
             'username' => $this->username,
             'avatar_url' => $this->avatar_path,
         ];

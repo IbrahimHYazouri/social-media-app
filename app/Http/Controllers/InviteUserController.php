@@ -7,20 +7,18 @@ namespace App\Http\Controllers;
 use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use App\Http\Requests\InviteUserRequest;
-use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Models\GroupUser;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
-use Inertia\Response;
 
 final class InviteUserController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(InviteUserRequest $request, Group $group): Response
+    public function __invoke(InviteUserRequest $request, Group $group): RedirectResponse
     {
         $invitee = $request->getInvitee();
         optional($request->getExistingPivot())->delete();
@@ -40,11 +38,10 @@ final class InviteUserController extends Controller
 
         // TODO handle notifying the invited user
 
-        return Inertia::render('Group/Show', [
-            'success' => __('Invitation send to :email', [
+        return back()->with('success',
+            __('Invitation send to :email', [
                 'email' => $invitee->email,
             ]),
-            'group' => GroupResource::make($group),
-        ]);
+        );
     }
 }

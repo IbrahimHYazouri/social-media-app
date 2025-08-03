@@ -4,12 +4,14 @@ import {User} from "@/types";
 
 defineProps<{
     user: User,
-    showApprovalActions: boolean
+    showApprovalActions: boolean,
+    showRoleChangeActions: boolean
 }>()
 
 defineEmits<{
     (e: 'approve', user: User): void,
-    (e: 'reject', user: User): void
+    (e: 'reject', user: User): void,
+    (e: 'changeRole', user: User, role: 'admin' | 'user')
 }>()
 </script>
 
@@ -35,6 +37,17 @@ defineEmits<{
                     <button class="text-xs py-1 px-2 rounded bg-red-500 hover:bg-red-600 text-white"
                             @click="$emit('reject', user)">
                         Reject
+                    </button>
+                </div>
+                <div v-if="showRoleChangeActions">
+                    <select
+                        @change="$emit('changeRole', user, $event.target.value)"
+                        class="rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 max-w-xs text-sm leading-6">
+                        <option :selected="user.role === 'admin'" value="admin">Admin</option>
+                        <option :selected="user.role === 'user'" value="user">User</option>
+                    </select>
+                    <button class="text-xs py-1.5 px-2 rounded bg-gray-700 hover:bg-gray-800 text-white ml-3 disabled:bg-gray-500">
+                        Delete
                     </button>
                 </div>
             </div>

@@ -101,6 +101,17 @@ const response = (user: User, action: 'approve' | 'reject') => {
         preserveScroll: true
     })
 }
+
+const changeRole = (user: User, role: 'admin' | 'user') => {
+    const form = useForm({
+        user_id: user.id,
+        role: role
+    })
+
+    form.patch(route('groups.change-role', props.group.data.slug), {
+        preserveScroll: true
+    })
+}
 </script>
 
 <template>
@@ -231,12 +242,16 @@ const response = (user: User, action: 'approve' | 'reject') => {
                             Posts
                         </TabPanel>
                         <TabPanel>
-                            <UserListItem
-                                v-for="user in users.data"
-                                :user="user"
-                                class="rounded-lg"
-                                :show-approval-actions="false"
-                            />
+                            <div class="grid grid-cols-2 gap-3">
+                                <UserListItem
+                                    v-for="user in users.data"
+                                    :user="user"
+                                    class="rounded-lg"
+                                    :show-approval-actions="false"
+                                    :show-role-change-actions="group.data.can.manage && group.data.user_id !== user.id"
+                                    @change-role="changeRole"
+                                />
+                            </div>
                         </TabPanel>
                         <TabPanel v-if="group.data.can.manage">
                             <div v-if="pending.data.length" class="grid grid-cols-2 gap-3">
@@ -244,7 +259,8 @@ const response = (user: User, action: 'approve' | 'reject') => {
                                     v-for="user in pending.data"
                                     :user="user"
                                     class="rounded-lg"
-                                    :show-approval-actions="true"
+                                    :show-approval-actions="group.data.can.manage"
+                                    :show-role-change-actions="false"
                                     @approve="response(user, 'approve')"
                                     @reject="response(user, 'reject')"
                                 />

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ApproveJoinRequestController;
+use App\Http\Controllers\ChangeUserRoleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupImageController;
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
             Route::post('join', JoinGroupController::class)->name('join');
             Route::post('invite', InviteUserController::class)->name('invite');
             Route::post('approve', ApproveJoinRequestController::class)->name('approve');
+            Route::patch('change-role', ChangeUserRoleController::class)->name('change-role');
         });
 });
 

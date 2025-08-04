@@ -9,6 +9,7 @@ use App\Enums\GroupUserStatusEnum;
 use App\Http\Requests\InviteUserRequest;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Notifications\InvitationToGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -36,7 +37,7 @@ final class InviteUserController extends Controller
             'owner_id' => Auth::id(),
         ]);
 
-        // TODO handle notifying the invited user
+        $invitee->notify(new InvitationToGroup($group->name, $hours));
 
         return back()->with('success',
             __('Invitation send to :email', [

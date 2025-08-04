@@ -15,6 +15,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileImageController;
 use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\RemoveUserFromGroupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->middleware(['auth', 'verified'])->name('dashboard');
@@ -47,6 +48,7 @@ Route::middleware('auth')->group(function () {
             Route::post('invite', InviteUserController::class)->name('invite');
             Route::post('approve', ApproveJoinRequestController::class)->name('approve');
             Route::patch('change-role', ChangeUserRoleController::class)->name('change-role');
+            Route::delete('users', RemoveUserFromGroupController::class)->name('users.remove');
         });
 });
 

@@ -11,7 +11,8 @@ defineProps<{
 defineEmits<{
     (e: 'approve', user: User): void,
     (e: 'reject', user: User): void,
-    (e: 'changeRole', user: User, role: 'admin' | 'user')
+    (e: 'changeRole', user: User, role: 'admin' | 'user'): void,
+    (e: 'removeUser', user: User): void
 }>()
 </script>
 
@@ -46,7 +47,9 @@ defineEmits<{
                         <option :selected="user.role === 'admin'" value="admin">Admin</option>
                         <option :selected="user.role === 'user'" value="user">User</option>
                     </select>
-                    <button class="text-xs py-1.5 px-2 rounded bg-gray-700 hover:bg-gray-800 text-white ml-3 disabled:bg-gray-500">
+                    <button
+                        @click="$emit('removeUser', user)"
+                        class="text-xs py-1.5 px-2 rounded bg-gray-700 hover:bg-gray-800 text-white ml-3 disabled:bg-gray-500">
                         Delete
                     </button>
                 </div>

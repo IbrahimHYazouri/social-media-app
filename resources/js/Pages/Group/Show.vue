@@ -112,6 +112,16 @@ const changeRole = (user: User, role: 'admin' | 'user') => {
         preserveScroll: true
     })
 }
+
+const removeUser = (user: User) => {
+    const form = useForm({
+        user_id: user.id
+    })
+
+    form.delete(route('groups.users.remove', props.group.data.slug), {
+        preserveScroll: true
+    })
+}
 </script>
 
 <template>
@@ -250,6 +260,7 @@ const changeRole = (user: User, role: 'admin' | 'user') => {
                                     :show-approval-actions="false"
                                     :show-role-change-actions="group.data.can.manage && group.data.user_id !== user.id"
                                     @change-role="changeRole"
+                                    @remove-user="removeUser"
                                 />
                             </div>
                         </TabPanel>

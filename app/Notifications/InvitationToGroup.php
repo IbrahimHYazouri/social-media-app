@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvitationToGroup extends Notification implements ShouldQueue
+final class InvitationToGroup extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,8 +18,7 @@ class InvitationToGroup extends Notification implements ShouldQueue
     public function __construct(
         public string $groupName,
         public int $expiresInHours
-    )
-    {
+    ) {
         //
     }
 

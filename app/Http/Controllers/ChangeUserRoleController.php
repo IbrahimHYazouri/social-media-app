@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Enums\GroupUserRoleEnum;
@@ -8,7 +10,7 @@ use App\Models\GroupUser;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class ChangeUserRoleController extends Controller
+final class ChangeUserRoleController extends Controller
 {
     /**
      * Handle the incoming request.

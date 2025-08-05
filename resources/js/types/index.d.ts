@@ -1,4 +1,5 @@
 import { Config } from 'ziggy-js';
+import {Notification} from "@/types/notification";
 
 export interface User {
     id: number;
@@ -18,6 +19,10 @@ export type PageProps<
 > = T & {
     auth: {
         user: User;
+        notifications: {
+            unread: Notification[],
+            count: number
+        }
     };
     ziggy: Config & { location: string };
 };

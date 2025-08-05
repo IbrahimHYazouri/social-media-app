@@ -8,7 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-final class UserRoleChanged extends Notification implements ShouldQueue
+final class RequestToJoinGroup extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,7 +17,7 @@ final class UserRoleChanged extends Notification implements ShouldQueue
      */
     public function __construct(
         public string $groupName,
-        public string $role
+        public string $userName,
     ) {
         //
     }
@@ -40,7 +40,7 @@ final class UserRoleChanged extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "Your role in this group {$this->groupName} has been changed to {$this->role}",
+            'message' => "User {$this->userName} request to join the group {$this->groupName}",
         ];
     }
 }

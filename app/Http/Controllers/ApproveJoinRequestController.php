@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Enums\GroupUserStatusEnum;
 use App\Http\Requests\ApproveJoinRequest;
 use App\Models\Group;
+use App\Models\User;
+use App\Notifications\JoinRequestApproved;
 use Illuminate\Http\RedirectResponse;
 
 final class ApproveJoinRequestController extends Controller
@@ -18,6 +20,12 @@ final class ApproveJoinRequestController extends Controller
 
         if ($approved) {
             $groupUser->update(['status' => GroupUserStatusEnum::APPROVED]);
+
+            /**
+             * @var User $user
+             */
+            $user = $groupUser->user;
+            $user->notify(new JoinRequestApproved($group->name));
         } else {
             $groupUser->delete();
         }

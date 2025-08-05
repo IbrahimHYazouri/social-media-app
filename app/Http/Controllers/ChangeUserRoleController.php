@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Enums\GroupUserRoleEnum;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\User;
+use App\Notifications\UserRoleChanged;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +31,12 @@ final class ChangeUserRoleController extends Controller
 
         if ($groupUser) {
             $groupUser->update(['role' => $data['role']]);
+
+            /**
+             * @var User $user
+             */
+            $user = $groupUser->user;
+            $user->notify(new UserRoleChanged($group->name, $data['role']));
         }
 
         return back();

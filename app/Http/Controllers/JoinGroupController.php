@@ -10,6 +10,8 @@ use App\Http\Requests\JoinGroupRequest;
 use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\User;
+use App\Notifications\GroupJoined;
+use App\Notifications\RequestToJoinGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,23 +29,26 @@ final class JoinGroupController extends Controller
         $user = Auth::user();
 
         if ($group->auto_approval) {
-            $status = GroupUserStatusEnum::APPROVED;
-            $message = __('You have joined “:name”', ['name' => $group->name]);
-        } else {
-            $status = GroupUserStatusEnum::PENDING;
-            $message = __('Your request to join “:name” is pending approval', [
-                'name' => $group->name,
+            GroupUser::create([
+                'group_id'   => $group->id,
+                'user_id'    => $user->id,
+                'status'     => GroupUserStatusEnum::APPROVED->value,
+                'role'       => GroupUserRoleEnum::USER->value,
+                'owner_id' => $user->id,
             ]);
+
+            $user->notify(new GroupJoined($group->name));
+        } else {
+            GroupUser::create([
+                'group_id'   => $group->id,
+                'user_id'    => $user->id,
+                'status'     => GroupUserStatusEnum::PENDING->value,
+                'role'       => GroupUserRoleEnum::USER->value,
+                'owner_id' => $user->id,
+            ]);
+
+            $group->adminUsers->each->notify(new RequestToJoinGroup($group->name, $user->name));
         }
-
-        GroupUser::create([
-            'group_id' => $group->id,
-            'user_id' => $user->id,
-            'status' => $status,
-            'role' => GroupUserRoleEnum::USER,
-            'owner_id' => $group->user_id,
-        ]);
-
-        return back()->with('success', $message);
+        return back();
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -92,5 +93,12 @@ final class Group extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'group_users')
             ->wherePivotNull('token')
             ->wherePivot('status', GroupUserStatusEnum::PENDING->value);
+    }
+
+    public function adminUsers()
+    {
+        return $this->belongsToMany(User::class, 'group_users')
+            ->wherePivot('role', GroupUserRoleEnum::ADMIN->value)
+            ->withPivot(['status', 'role', 'group_id', 'owner_id']);
     }
 }

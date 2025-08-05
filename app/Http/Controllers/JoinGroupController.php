@@ -30,25 +30,26 @@ final class JoinGroupController extends Controller
 
         if ($group->auto_approval) {
             GroupUser::create([
-                'group_id'   => $group->id,
-                'user_id'    => $user->id,
-                'status'     => GroupUserStatusEnum::APPROVED->value,
-                'role'       => GroupUserRoleEnum::USER->value,
+                'group_id' => $group->id,
+                'user_id' => $user->id,
+                'status' => GroupUserStatusEnum::APPROVED->value,
+                'role' => GroupUserRoleEnum::USER->value,
                 'owner_id' => $user->id,
             ]);
 
             $user->notify(new GroupJoined($group->name));
         } else {
             GroupUser::create([
-                'group_id'   => $group->id,
-                'user_id'    => $user->id,
-                'status'     => GroupUserStatusEnum::PENDING->value,
-                'role'       => GroupUserRoleEnum::USER->value,
+                'group_id' => $group->id,
+                'user_id' => $user->id,
+                'status' => GroupUserStatusEnum::PENDING->value,
+                'role' => GroupUserRoleEnum::USER->value,
                 'owner_id' => $user->id,
             ]);
 
             $group->adminUsers->each->notify(new RequestToJoinGroup($group->name, $user->name));
         }
+
         return back();
     }
 }

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RequestToJoinGroup extends Notification implements ShouldQueue
+final class RequestToJoinGroup extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,8 +18,7 @@ class RequestToJoinGroup extends Notification implements ShouldQueue
     public function __construct(
         public string $groupName,
         public string $userName,
-    )
-    {
+    ) {
         //
     }
 

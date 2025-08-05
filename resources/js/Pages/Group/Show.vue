@@ -208,16 +208,22 @@ const removeUser = (user: User) => {
 
                             <div v-else>
                                 <span
-                                    v-if="group.data.status === 'pending'"
+                                    v-if="group.data.status === 'approved' && group.data.role"
+                                    class="text-sm italic text-gray-600"
+                                >
+                                    You’re a member of this group
+                                </span>
+
+                                <span
+                                    v-else-if="group.data.status === 'pending'"
                                     class="text-sm italic text-gray-500"
                                 >
-                            Pending approval…
-                          </span>
+                                    Pending approval…
+                                </span>
 
                                 <PrimaryButton
-                                    v-else-if="group.data.can.join"
+                                    v-else-if="group.data.can.join && group.data.status !== 'approved'"
                                     @click="join"
-                                    :class="{'disabled:opacity-25 disabled:cursor-not-allowed': group.data.status === 'pending'}"
                                 >
                                     {{ group.data.auto_approval ? 'Join' : 'Request to join' }}
                                 </PrimaryButton>

@@ -7,9 +7,13 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import TextInput from "@/Components/TextInput.vue";
 import { Link, usePage } from '@inertiajs/vue3';
 import {MoonIcon} from '@heroicons/vue/24/solid';
+import {BellIcon} from '@heroicons/vue/24/outline';
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 
+const showNotifications = ref(false)
 const showingNavigationDropdown = ref(false);
 const authUser = usePage().props.auth.user;
+const notifications = usePage().props.auth.notifications
 const keywords = ref("")
 
 const toggleDarkMode = () => {
@@ -44,6 +48,63 @@ const toggleDarkMode = () => {
 
                     <div class="flex items-center gap-3 flex-1">
                         <TextInput v-model="keywords" placeholder="Search on the website" class="w-full"/>
+
+                        <Popover class="relative">
+                            <PopoverButton class="relative p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
+                                <BellIcon class="size-6 text-gray-600 dark:text-gray-300"/>
+                                <span
+                                    v-if="notifications.count"
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                                >
+                                    {{ notifications.count }}
+                                </span>
+                            </PopoverButton>
+
+                            <transition
+                                enter-active-class="transition duration-200 ease-out"
+                                enter-from-class="translate-y-1 opacity-0"
+                                enter-to-class="translate-y-0 opacity-100"
+                                leave-active-class="transition duration-150 ease-in"
+                                leave-from-class="translate-y-0 opacity-100"
+                                leave-to-class="translate-y-1 opacity-0"
+                            >
+                                <PopoverPanel class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                                    <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                                        <span class="font-semibold text-gray-700 dark:text-gray-200">
+                                          Notifications
+                                        </span>
+                                    </div>
+
+                                    <ul class="max-h-64 overflow-auto">
+                                        <li v-for="notification in notifications.unread"
+                                            class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3"
+                                        >
+                                            <BellIcon class="size-5 text-indigo-500 flex-shrink-0"/>
+                                            <div class="flex-1">
+                                                <p class="text-sm text-gray-800 dark:text-gray-200">
+                                                    {{notification.data.message || notification.type}}
+                                                </p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                    {{ notification.created_at }}
+                                                </p>
+                                            </div>
+                                        </li>
+                                        <li v-if="!notifications.unread.length" class="p-3 text-center text-gray-500 dark:text-gray-400">
+                                            No new notifications
+                                        </li>
+                                    </ul>
+
+                                    <div class="p-3 border-t border-gray-100 dark:border-gray-700 text-center">
+                                        <!-- TODO add link to show all notifications -->
+                                        <span
+                                            class="text-indigo-600 dark:text-indigo-400 text-sm hover:underline"
+                                        >
+                                            See all
+                                        </span>
+                                    </div>
+                                </PopoverPanel>
+                            </transition>
+                        </Popover>
 
                         <button @click="toggleDarkMode" class="dark:text-white">
                             <MoonIcon class="w-5 h-5"/>

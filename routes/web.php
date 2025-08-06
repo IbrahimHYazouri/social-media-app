@@ -10,6 +10,7 @@ use App\Http\Controllers\GroupImageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InviteUserController;
 use App\Http\Controllers\JoinGroupController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -50,6 +51,8 @@ Route::middleware('auth')->group(function () {
             Route::patch('change-role', ChangeUserRoleController::class)->name('change-role');
             Route::delete('users', RemoveUserFromGroupController::class)->name('users.remove');
         });
+
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
 });
 
 require __DIR__.'/auth.php';

@@ -9,8 +9,8 @@ import { Link, usePage } from '@inertiajs/vue3';
 import {MoonIcon} from '@heroicons/vue/24/solid';
 import {BellIcon} from '@heroicons/vue/24/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
+import {Notification} from "@/types/notification";
 
-const showNotifications = ref(false)
 const showingNavigationDropdown = ref(false);
 const authUser = usePage().props.auth.user;
 const notifications = usePage().props.auth.notifications
@@ -25,6 +25,14 @@ const toggleDarkMode = () => {
         html.classList.add('dark')
         localStorage.setItem('darkMode', '1')
     }
+}
+
+const getNotificationHref = (notification: Notification) => {
+    if (notification.data.target_route && notification.data.target_params) {
+        return route(notification.data.target_route, notification.data.target_params);
+    }
+
+    return '#';
 }
 </script>
 
@@ -79,15 +87,19 @@ const toggleDarkMode = () => {
                                         <li v-for="notification in notifications.unread"
                                             class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3"
                                         >
-                                            <BellIcon class="size-5 text-indigo-500 flex-shrink-0"/>
-                                            <div class="flex-1">
-                                                <p class="text-sm text-gray-800 dark:text-gray-200">
-                                                    {{notification.data.message || notification.type}}
-                                                </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    {{ notification.created_at }}
-                                                </p>
-                                            </div>
+                                            <Link
+                                                :href="getNotificationHref(notification)"
+                                                class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                <BellIcon class="size-5 text-indigo-500 flex-shrink-0"/>
+                                                <div class="flex-1">
+                                                    <p class="text-sm text-gray-800 dark:text-gray-200">
+                                                        {{notification.data.message || notification.type}}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {{ notification.created_at }}
+                                                    </p>
+                                                </div>
+                                            </Link>
                                         </li>
                                         <li v-if="!notifications.unread.length" class="p-3 text-center text-gray-500 dark:text-gray-400">
                                             No new notifications

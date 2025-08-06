@@ -1,6 +1,10 @@
 export interface Notification {
     id: string;
     type: string;
-    data: Record<string, any>;
+    data: {
+        message: string;
+        target_route: string;
+        target_params: Record<string, string>;
+    };
     created_at: string
 }

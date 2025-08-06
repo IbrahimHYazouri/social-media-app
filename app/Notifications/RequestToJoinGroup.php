@@ -42,6 +42,7 @@ final class RequestToJoinGroup extends Notification implements ShouldQueue
     {
         return [
             'message' => "User {$this->userName} request to join the group {$this->group->name}",
+            'target_route' => 'groups.show',
             'target_params' => ['group' => $this->group->slug]
         ];
     }

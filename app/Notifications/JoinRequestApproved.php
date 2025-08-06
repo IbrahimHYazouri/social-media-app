@@ -41,6 +41,7 @@ final class JoinRequestApproved extends Notification implements ShouldQueue
     {
         return [
             'message' => "Your request to join {$this->group->name} has been approved.",
+            'target_route' => 'groups.show',
             'target_params' => ['group' => $this->group->slug]
         ];
     }

@@ -42,6 +42,7 @@ final class InvitationToGroup extends Notification implements ShouldQueue
     {
         return [
             'message' => "You have been invited to join the group {$this->group->name}. Invitation link expires in {$this->expiresInHours} hours.",
+            'target_route' => 'groups.show',
             'target_params' => ['group' => $this->group->slug]
         ];
     }

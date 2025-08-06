@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Models\Group;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -16,7 +17,7 @@ final class InvitationToGroup extends Notification implements ShouldQueue
      * Create a new notification instance.
      */
     public function __construct(
-        public string $groupName,
+        public Group $group,
         public int $expiresInHours
     ) {
         //
@@ -40,9 +41,8 @@ final class InvitationToGroup extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "You have been invited to join the group {$this->groupName}",
-            'expires_in' => $this->expiresInHours,
-            'group_name' => $this->groupName,
+            'message' => "You have been invited to join the group {$this->group->name}. Invitation link expires in {$this->expiresInHours} hours.",
+            'target_params' => ['group' => $this->group->slug]
         ];
     }
 }

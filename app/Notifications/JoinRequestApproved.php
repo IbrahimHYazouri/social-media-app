@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Models\Group;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -16,7 +17,7 @@ final class JoinRequestApproved extends Notification implements ShouldQueue
      * Create a new notification instance.
      */
     public function __construct(
-        public string $groupName
+        public Group $group
     ) {
         //
     }
@@ -39,7 +40,8 @@ final class JoinRequestApproved extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "Your request to join {$this->groupName} has been approved.",
+            'message' => "Your request to join {$this->group->name} has been approved.",
+            'target_params' => ['group' => $this->group->slug]
         ];
     }
 }

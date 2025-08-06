@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Models\Group;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -16,7 +17,7 @@ final class RequestToJoinGroup extends Notification implements ShouldQueue
      * Create a new notification instance.
      */
     public function __construct(
-        public string $groupName,
+        public Group $group,
         public string $userName,
     ) {
         //
@@ -40,7 +41,8 @@ final class RequestToJoinGroup extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "User {$this->userName} request to join the group {$this->groupName}",
+            'message' => "User {$this->userName} request to join the group {$this->group->name}",
+            'target_params' => ['group' => $this->group->slug]
         ];
     }
 }

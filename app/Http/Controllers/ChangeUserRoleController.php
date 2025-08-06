@@ -36,7 +36,7 @@ final class ChangeUserRoleController extends Controller
              * @var User $user
              */
             $user = $groupUser->user;
-            $user->notify(new UserRoleChanged($group->name, $data['role']));
+            $user->notify(new UserRoleChanged($group, $data['role']));
         }
 
         return back();

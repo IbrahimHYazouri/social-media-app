@@ -5,7 +5,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import TextInput from "@/Components/TextInput.vue";
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage, useForm } from '@inertiajs/vue3';
 import {MoonIcon} from '@heroicons/vue/24/solid';
 import {BellIcon} from '@heroicons/vue/24/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
@@ -25,6 +25,12 @@ const toggleDarkMode = () => {
         html.classList.add('dark')
         localStorage.setItem('darkMode', '1')
     }
+}
+
+const markAsRead = (id: string) => {
+    const form = useForm({});
+
+    form.post(route('notifications.read', id))
 }
 
 const getNotificationHref = (notification: Notification) => {
@@ -89,6 +95,7 @@ const getNotificationHref = (notification: Notification) => {
                                         >
                                             <Link
                                                 :href="getNotificationHref(notification)"
+                                                @click.native.prevent="() => { markAsRead(notification.id); $inertia.visit(getNotificationHref(notification)) }"
                                                 class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <BellIcon class="size-5 text-indigo-500 flex-shrink-0"/>
                                                 <div class="flex-1">

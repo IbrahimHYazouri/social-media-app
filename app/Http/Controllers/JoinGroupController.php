@@ -13,7 +13,6 @@ use App\Models\User;
 use App\Notifications\GroupJoined;
 use App\Notifications\RequestToJoinGroup;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 final class JoinGroupController extends Controller

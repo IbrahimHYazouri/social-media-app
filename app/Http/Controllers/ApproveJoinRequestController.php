@@ -25,7 +25,7 @@ final class ApproveJoinRequestController extends Controller
              * @var User $user
              */
             $user = $groupUser->user;
-            $user->notify(new JoinRequestApproved($group->name));
+            $user->notify(new JoinRequestApproved($group));
         } else {
             $groupUser->delete();
         }

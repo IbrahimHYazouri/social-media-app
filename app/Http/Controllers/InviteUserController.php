@@ -37,7 +37,7 @@ final class InviteUserController extends Controller
             'owner_id' => Auth::id(),
         ]);
 
-        $invitee->notify(new InvitationToGroup($group->name, $hours));
+        $invitee->notify(new InvitationToGroup($group, $hours));
 
         return back()->with('success',
             __('Invitation send to :email', [

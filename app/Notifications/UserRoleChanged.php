@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Models\Group;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -16,7 +17,7 @@ final class UserRoleChanged extends Notification implements ShouldQueue
      * Create a new notification instance.
      */
     public function __construct(
-        public string $groupName,
+        public Group $group,
         public string $role
     ) {
         //
@@ -40,7 +41,8 @@ final class UserRoleChanged extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "Your role in this group {$this->groupName} has been changed to {$this->role}",
+            'message' => "Your role in this group {$this->group->name} has been changed to {$this->role}",
+            'target_params' => ['group' => $this->group->slug]
         ];
     }
 }

@@ -37,7 +37,7 @@ final class JoinGroupController extends Controller
                 'owner_id' => $user->id,
             ]);
 
-            $user->notify(new GroupJoined($group->name));
+            $user->notify(new GroupJoined($group));
         } else {
             GroupUser::create([
                 'group_id' => $group->id,
@@ -47,7 +47,7 @@ final class JoinGroupController extends Controller
                 'owner_id' => $user->id,
             ]);
 
-            $group->adminUsers->each->notify(new RequestToJoinGroup($group->name, $user->name));
+            $group->adminUsers->each->notify(new RequestToJoinGroup($group, $user->name));
         }
 
         return back();

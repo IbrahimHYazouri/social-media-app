@@ -114,12 +114,12 @@ const getNotificationHref = (notification: Notification) => {
                                     </ul>
 
                                     <div class="p-3 border-t border-gray-100 dark:border-gray-700 text-center">
-                                        <!-- TODO add link to show all notifications -->
-                                        <span
+                                        <Link
+                                            :href="route('notifications.index')"
                                             class="text-indigo-600 dark:text-indigo-400 text-sm hover:underline"
                                         >
                                             See all
-                                        </span>
+                                        </Link>
                                     </div>
                                 </PopoverPanel>
                             </transition>

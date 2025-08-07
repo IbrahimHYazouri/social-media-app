@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('users', RemoveUserFromGroupController::class)->name('users.remove');
         });
 
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
 });
 

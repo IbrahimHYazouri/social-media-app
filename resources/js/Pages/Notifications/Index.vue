@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Head} from "@inertiajs/vue3"
+import {Head, useForm} from "@inertiajs/vue3"
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {Notification} from "@/types/notification";
 import {BellIcon} from '@heroicons/vue/24/outline';
@@ -9,6 +9,12 @@ defineProps<{
         data: Notification[]
     }
 }>()
+
+const markAllAsRead = () => {
+    const form = useForm({});
+
+    form.post(route('notifications.mark-all-read'))
+}
 </script>
 
 <template>
@@ -18,6 +24,7 @@ defineProps<{
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-xl font-semibold">All Notifications</h1>
                 <button
+                    @click="markAllAsRead"
                     class="text-sm text-blue-600 hover:underline"
                 >
                     Mark all as read

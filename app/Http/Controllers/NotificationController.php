@@ -22,11 +22,18 @@ final class NotificationController extends Controller
         ]);
     }
 
-    public function read($id)
+    public function markRead($id)
     {
         $notification = Auth::user()->unreadNotifications()->findOrFail($id);
         $notification->markAsRead();
 
         return response()->noContent();
+    }
+
+    public function markAllRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+
+        return back();
     }
 }

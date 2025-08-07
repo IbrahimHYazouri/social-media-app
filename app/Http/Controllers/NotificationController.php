@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Resources\NotificationResource;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class NotificationController extends Controller
+final class NotificationController extends Controller
 {
     public function index()
     {
@@ -25,6 +26,7 @@ class NotificationController extends Controller
     {
         $notification = Auth::user()->unreadNotifications()->findOrFail($id);
         $notification->markAsRead();
+
         return response()->noContent();
     }
 }

@@ -43,7 +43,7 @@ final class UserRoleChanged extends Notification implements ShouldQueue
         return [
             'message' => "Your role in this group {$this->group->name} has been changed to {$this->role}",
             'target_route' => 'groups.show',
-            'target_params' => ['group' => $this->group->slug]
+            'target_params' => ['group' => $this->group->slug],
         ];
     }
 }

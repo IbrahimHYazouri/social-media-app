@@ -42,7 +42,7 @@ final class GroupJoined extends Notification implements ShouldQueue
         return [
             'message' => "You joined {$this->group->name}!",
             'target_route' => 'groups.show',
-            'target_params' => ['group' => $this->group->slug]
+            'target_params' => ['group' => $this->group->slug],
         ];
     }
 }

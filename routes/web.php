@@ -8,7 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupImageController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InviteUserController;
+use App\Http\Controllers\GroupInvitationController;
 use App\Http\Controllers\JoinGroupController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostAttachmentController;
@@ -46,15 +46,19 @@ Route::middleware('auth')->group(function () {
         ->name('groups.')
         ->group(function () {
             Route::post('join', JoinGroupController::class)->name('join');
-            Route::post('invite', InviteUserController::class)->name('invite');
+            Route::post('invite', [GroupInvitationController::class, 'invite'])->name('invite');
             Route::post('approve', ApproveJoinRequestController::class)->name('approve');
             Route::patch('change-role', ChangeUserRoleController::class)->name('change-role');
             Route::delete('users', RemoveUserFromGroupController::class)->name('users.remove');
         });
 
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
-    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+
+    Route::get('groups/invitations/accept/{token}', [GroupInvitationController::class, 'show'])->name('groups.invitations.show');
+    Route::post('groups/invitations/accept/{token}', [GroupInvitationController::class, 'accept'])->name('groups.invitations.accept');
+
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
 });
 
 require __DIR__.'/auth.php';

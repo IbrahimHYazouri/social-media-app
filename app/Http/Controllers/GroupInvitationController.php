@@ -26,7 +26,7 @@ final class GroupInvitationController extends Controller
             ->where('token', $token)
             ->first();
 
-        if (!$groupUser) {
+        if (! $groupUser) {
             return response()->json([
                 'message' => 'This invitation token is invalid.',
             ], 404);
@@ -35,7 +35,7 @@ final class GroupInvitationController extends Controller
         return Inertia::render('Group/GroupInvitationAccept', [
             'group' => [
                 'name' => $groupUser->group->name,
-                'id' => $groupUser->group->id
+                'id' => $groupUser->group->id,
             ],
             'token' => $groupUser->token,
         ]);
@@ -56,7 +56,8 @@ final class GroupInvitationController extends Controller
             'role' => GroupUserRoleEnum::USER,
             'token' => $token,
             'token_expires_at' => now()->addHours($hours),
-            'owner_id' => Auth::id(),
+            'owner_id' => $group->user_id,
+            'created_by' => Auth::id()
         ]);
 
         $invitee->notify(new InvitationToGroup($group, $groupUser, $hours));
@@ -75,7 +76,7 @@ final class GroupInvitationController extends Controller
          */
         $groupUser = GroupUser::where('token', $token)->first();
 
-        if (!$groupUser) {
+        if (! $groupUser) {
             return response()->json([
                 'message' => 'The invitation link is not valid.',
             ], 404);

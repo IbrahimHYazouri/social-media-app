@@ -8,6 +8,7 @@ use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
 use App\Models\Group;
 use App\Models\GroupUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 final class GroupService
@@ -24,6 +25,7 @@ final class GroupService
                 'user_id' => $userId,
                 'group_id' => $group->id,
                 'owner_id' => $group->user_id,
+                'created_by' => Auth::id()
             ]);
 
             $group->setRelation('pivot', $groupUser);

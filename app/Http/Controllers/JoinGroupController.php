@@ -33,7 +33,8 @@ final class JoinGroupController extends Controller
                 'user_id' => $user->id,
                 'status' => GroupUserStatusEnum::APPROVED->value,
                 'role' => GroupUserRoleEnum::USER->value,
-                'owner_id' => $user->id,
+                'owner_id' => $group->user_id,
+                'created_by' => $user->id
             ]);
 
             $user->notify(new GroupJoined($group));
@@ -43,7 +44,8 @@ final class JoinGroupController extends Controller
                 'user_id' => $user->id,
                 'status' => GroupUserStatusEnum::PENDING->value,
                 'role' => GroupUserRoleEnum::USER->value,
-                'owner_id' => $user->id,
+                'owner_id' => $group->user_id,
+                'created_by' => $user->id
             ]);
 
             $group->adminUsers->each->notify(new RequestToJoinGroup($group, $user->name));

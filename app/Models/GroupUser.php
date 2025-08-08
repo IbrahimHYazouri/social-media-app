@@ -28,7 +28,7 @@ final class GroupUser extends Model
     public const UPDATED_AT = null;
 
     protected $fillable = [
-        'status', 'role', 'owner_id', 'user_id', 'group_id', 'token', 'token_expires_at',
+        'status', 'role', 'owner_id', 'created_by', 'user_id', 'group_id', 'token', 'token_expires_at',
     ];
 
     protected $casts = [

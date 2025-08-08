@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read DateTimeInterface $token_expires_at
  * @property-read DateTimeInterface $token_used
  * @property-read int $owner_id
+ * @property-read int $created_by
  * @property-read int $user_id
  * @property-read int $group_id
  * @property-read DateTimeInterface $created_at
@@ -40,9 +41,9 @@ final class GroupUser extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function user(): BelongsTo
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function group(): BelongsTo

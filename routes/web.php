@@ -7,8 +7,8 @@ use App\Http\Controllers\ChangeUserRoleController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupImageController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GroupInvitationController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JoinGroupController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostAttachmentController;
@@ -51,7 +51,6 @@ Route::middleware('auth')->group(function () {
             Route::patch('change-role', ChangeUserRoleController::class)->name('change-role');
             Route::delete('users', RemoveUserFromGroupController::class)->name('users.remove');
         });
-
 
     Route::get('groups/invitations/accept/{token}', [GroupInvitationController::class, 'show'])->name('groups.invitations.show');
     Route::post('groups/invitations/accept/{token}', [GroupInvitationController::class, 'accept'])->name('groups.invitations.accept');

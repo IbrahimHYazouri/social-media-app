@@ -4,12 +4,17 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {ref} from "vue";
 import axios from "axios";
-import { router } from '@inertiajs/vue3'
+import { router, Link } from '@inertiajs/vue3'
 
 const props = defineProps<{
     group: {
         id: string;
         name: string;
+    },
+    invitee: {
+        id: string;
+        name: string;
+        username: string;
     },
     token: string
 }>()
@@ -40,32 +45,32 @@ const accept = async () => {
 
 <template>
     <AuthenticatedLayout>
-        <div class="p-4 flex items-center justify-center">
-            <div class="flex items-center justify-center size-full">
-                <div
-                    class="flex flex-col items-center gap-5 w-full sm:max-w-md m-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden rounded-lg space-y-4"
-                >
-                    <ApplicationLogo class="w-16 h-16 fill-current text-gray-500"/>
-                    <div class="flex flex-col justify-center items-center gap-2 text-center">
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
-                            You're invited to join
-                        </h2>
-                        <p class="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-                            " {{ group.name }} "
-                        </p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Click the button below to accept the invitation and become a member of this group.
-                        </p>
-                    </div>
+        <div class="flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900">
+            <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-6 text-center">
+                <ApplicationLogo class="mx-auto w-16 h-16 text-gray-500 dark:text-gray-400" />
+
+                <div class="space-y-1">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">
+                        You're invited to join
+                    </h2>
+                    <p class="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
+                        “{{ group.name }}”
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        by <Link :href="route('profile.show', invitee.username)" class="font-semibold">{{ invitee.name }}</Link> (@{{ invitee.username }})
+                    </p>
+                </div>
+
+                <div class="space-y-2">
                     <SecondaryButton
                         @click="accept"
                         :disabled="loading"
-                        class="disabled:opacity-25 disabled:cursor-not-allowed"
+                        class="disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Accept invitation
+                        {{ loading ? 'Processing...' : 'Accept Invitation' }}
                     </SecondaryButton>
 
-                    <p v-if="error" class="mb-4 text-red-600">{{ error }}</p>
+                    <p v-if="error" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
                 </div>
             </div>
         </div>

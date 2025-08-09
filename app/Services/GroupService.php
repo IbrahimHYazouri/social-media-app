@@ -25,7 +25,7 @@ final class GroupService
                 'user_id' => $userId,
                 'group_id' => $group->id,
                 'owner_id' => $group->user_id,
-                'created_by' => Auth::id()
+                'created_by' => Auth::id(),
             ]);
 
             $group->setRelation('pivot', $groupUser);

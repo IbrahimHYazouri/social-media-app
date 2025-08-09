@@ -43,7 +43,7 @@ final class InvitationToGroup extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "You have been invited to join the group {$this->group->name}. Invitation link expires in {$this->expiresInHours} hours.",
+            'message' => "You have been invited to join the group {$this->group->name} by user {$this->groupUser->creator->username}. Invitation link expires in {$this->expiresInHours} hours.",
             'target_route' => 'groups.invitations.accept',
             'target_params' => ['token' => $this->groupUser->token],
         ];

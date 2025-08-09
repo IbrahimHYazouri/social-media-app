@@ -37,6 +37,11 @@ final class GroupInvitationController extends Controller
                 'name' => $groupUser->group->name,
                 'id' => $groupUser->group->id,
             ],
+            'invitee' => [
+                'id' => $groupUser->creator->id,
+                'name' => $groupUser->creator->name,
+                'username' => $groupUser->creator->username,
+            ],
             'token' => $groupUser->token,
         ]);
     }
@@ -57,7 +62,7 @@ final class GroupInvitationController extends Controller
             'token' => $token,
             'token_expires_at' => now()->addHours($hours),
             'owner_id' => $group->user_id,
-            'created_by' => Auth::id()
+            'created_by' => Auth::id(),
         ]);
 
         $invitee->notify(new InvitationToGroup($group, $groupUser, $hours));

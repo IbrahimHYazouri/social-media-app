@@ -9,6 +9,8 @@ use App\Enums\GroupUserStatusEnum;
 use App\Http\Requests\InviteUserRequest;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\User;
+use App\Notifications\InvitationAccepted;
 use App\Notifications\InvitationToGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +105,12 @@ final class GroupInvitationController extends Controller
             'status' => GroupUserStatusEnum::APPROVED,
             'token_used' => now(),
         ]);
+
+        /**
+         * @var User $invitee
+         */
+        $invitee = $groupUser->creator;
+        $invitee?->notify(new InvitationAccepted($groupUser));
 
         return response()->json([
             'message' => 'You have successfully joined the group.',

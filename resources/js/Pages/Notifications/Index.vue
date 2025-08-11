@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from "@inertiajs/vue3"
+import { Head, Link, useForm, router } from "@inertiajs/vue3"
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Notification } from "@/types/notification";
 import { BellIcon, CheckIcon } from '@heroicons/vue/24/outline';
@@ -9,6 +9,11 @@ defineProps<{
         data: Notification[]
     }
 }>()
+
+const handleNotificationClick = (notification: Notification) => {
+    markAsRead(notification.id)
+    router.visit(getNotificationHref(notification))
+}
 
 const markAsRead = (id: string) => {
     const form = useForm({});
@@ -63,7 +68,7 @@ const getNotificationHref = (notification: Notification) => {
                 <div class="space-y-3">
                     <Link
                         :href="getNotificationHref(notification)"
-                        @click.native.prevent="() => { markAsRead(notification.id); $inertia.visit(getNotificationHref(notification)) }"
+                        @click.prevent="handleNotificationClick(notification)"
                         v-for="notification in notifications.data"
                         :key="notification.id"
                         class="bg-white rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md"

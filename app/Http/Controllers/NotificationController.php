@@ -27,7 +27,7 @@ final class NotificationController extends Controller
         $notification = Auth::user()->unreadNotifications()->findOrFail($id);
         $notification->markAsRead();
 
-        return response()->noContent();
+        return back();
     }
 
     public function markAllRead()

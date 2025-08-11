@@ -5,7 +5,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import TextInput from "@/Components/TextInput.vue";
-import { Link, usePage, useForm } from '@inertiajs/vue3';
+import { Link, usePage, useForm, router } from '@inertiajs/vue3';
 import {MoonIcon} from '@heroicons/vue/24/solid';
 import {BellIcon} from '@heroicons/vue/24/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
@@ -52,6 +52,11 @@ const markAsRead = (id: string) => {
     const form = useForm({});
 
     form.post(route('notifications.read', id))
+}
+
+const handleNotificationClick = (notification: Notification) => {
+    markAsRead(notification.id)
+    router.visit(getNotificationHref(notification))
 }
 
 const getNotificationHref = (notification: Notification) => {
@@ -114,9 +119,8 @@ const getNotificationHref = (notification: Notification) => {
                                         <li v-for="notification in notifications.unread"
                                             class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3"
                                         >
-                                            <Link
-                                                :href="getNotificationHref(notification)"
-                                                @click.native.prevent="() => { markAsRead(notification.id); $inertia.visit(getNotificationHref(notification)) }"
+                                            <Link :href="getNotificationHref(notification)"
+                                                @click.prevent="handleNotificationClick(notification)"
                                                 class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <BellIcon class="size-5 text-indigo-500 flex-shrink-0"/>
                                                 <div class="flex-1">

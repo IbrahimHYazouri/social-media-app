@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -10,11 +10,32 @@ import {MoonIcon} from '@heroicons/vue/24/solid';
 import {BellIcon} from '@heroicons/vue/24/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import {Notification} from "@/types/notification";
+import { useEcho } from "@laravel/echo-vue";
 
 const showingNavigationDropdown = ref(false);
 const authUser = usePage().props.auth.user;
 const notifications = usePage().props.auth.notifications
 const keywords = ref("")
+
+useEcho(
+    `App.Models.User.${authUser.id}`,
+    '.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated',
+    (notification) => {
+        console.log('New notification received:', notification);
+
+        // // Update the notifications count and list
+        // notifications.value.count += 1;
+        // notifications.value.unread.unshift({
+        //     id: notification.id || Date.now().toString(),
+        //     type: notification.type,
+        //     data: notification,
+        //     created_at: new Date().toLocaleString(),
+        //     read_at: null
+        // });
+    },
+    [authUser.id], // dependencies
+    'private'
+)
 
 const toggleDarkMode = () => {
     const html = window.document.documentElement

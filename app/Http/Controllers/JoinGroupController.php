@@ -37,7 +37,7 @@ final class JoinGroupController extends Controller
                 'created_by' => $user->id,
             ]);
 
-            $user->notify(new GroupJoined($group));
+            $user->notify(new GroupJoined($group, $user));
         } else {
             GroupUser::create([
                 'group_id' => $group->id,

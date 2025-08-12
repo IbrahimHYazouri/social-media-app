@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use App\Models\GroupUser;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-final class InvitationAccepted extends Notification implements ShouldQueue
+final class InvitationAccepted extends Notification implements ShouldQueue, ShouldBroadcast
 {
     use Queueable;
 
@@ -29,7 +32,7 @@ final class InvitationAccepted extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -44,5 +47,15 @@ final class InvitationAccepted extends Notification implements ShouldQueue
             'target_route' => 'groups.show',
             'target_params' => ['group' => $this->groupUser->group->slug],
         ];
+    }
+
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage($this->toArray($notifiable));
+    }
+
+    public function broadcastOn(): PrivateChannel
+    {
+        return new PrivateChannel("App.Models.User.{$this->groupUser->created_by}");
     }
 }

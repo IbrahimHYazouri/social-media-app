@@ -6,6 +6,6 @@ export interface Notification {
         target_route: string;
         target_params: Record<string, string>;
     };
-    created_at: string;
+    created_at?: string;
     read_at ?: string;
 }

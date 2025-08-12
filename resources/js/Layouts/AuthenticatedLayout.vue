@@ -12,6 +12,14 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import {Notification} from "@/types/notification";
 import { useEcho } from "@laravel/echo-vue";
 
+interface LiveNotification {
+    id: string;
+    type: string;
+    message: string;
+    target_route: string;
+    target_params: Record<string, string>
+}
+
 const showingNavigationDropdown = ref(false);
 const authUser = usePage().props.auth.user;
 const notifications = usePage().props.auth.notifications
@@ -20,18 +28,19 @@ const keywords = ref("")
 useEcho(
     `App.Models.User.${authUser.id}`,
     '.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated',
-    (notification) => {
+    (notification: LiveNotification) => {
         console.log('New notification received:', notification);
 
-        // // Update the notifications count and list
-        // notifications.value.count += 1;
-        // notifications.value.unread.unshift({
-        //     id: notification.id || Date.now().toString(),
-        //     type: notification.type,
-        //     data: notification,
-        //     created_at: new Date().toLocaleString(),
-        //     read_at: null
-        // });
+        notifications.count += 1;
+        notifications.unread.unshift({
+            id: notification.id,
+            type: notification.type,
+            data: {
+                message: notification.message,
+                target_route: notification.target_route,
+                target_params: notification.target_params
+            },
+        })
     },
     [authUser.id], // dependencies
     'private'

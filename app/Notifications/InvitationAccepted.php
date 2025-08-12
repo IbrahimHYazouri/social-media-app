@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-final class InvitationAccepted extends Notification implements ShouldQueue, ShouldBroadcast
+final class InvitationAccepted extends Notification implements ShouldBroadcast, ShouldQueue
 {
     use Queueable;
 

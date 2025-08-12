@@ -13,7 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-final class InvitationToGroup extends Notification implements ShouldQueue, ShouldBroadcast
+final class InvitationToGroup extends Notification implements ShouldBroadcast, ShouldQueue
 {
     use Queueable;
 

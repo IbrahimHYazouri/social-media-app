@@ -10,15 +10,24 @@ defineProps<{
     }
 }>()
 
-const handleNotificationClick = (notification: Notification) => {
-    markAsRead(notification.id)
-    router.visit(getNotificationHref(notification))
-}
-
-const markAsRead = (id: string) => {
+const markAsRead = async (id: string) => {
     const form = useForm({});
 
-    form.post(route('notifications.read', id))
+    return new Promise((resolve, reject) => {
+        form.post(route('notifications.read', id), {
+            onSuccess: () => {
+                resolve(true)
+            },
+            onError: () => {
+                reject(false);
+            }
+        })
+    })
+}
+
+const handleNotificationClick = async (notification: Notification) => {
+    await markAsRead(notification.id)
+    router.visit(getNotificationHref(notification))
 }
 
 const markAllAsRead = () => {

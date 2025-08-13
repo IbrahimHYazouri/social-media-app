@@ -57,14 +57,31 @@ const toggleDarkMode = () => {
     }
 }
 
-const markAsRead = (id: string) => {
+const markAsRead = async (id: string) => {
     const form = useForm({});
 
-    form.post(route('notifications.read', id))
+    return new Promise((resolve, reject) => {
+        form.post(route('notifications.read', id), {
+            onSuccess: () => {
+                notifications.count = Math.max(0, notifications.count - 1);
+
+                const index = notifications.unread.findIndex(n => n.id === id);
+
+                if (index !== -1) {
+                    notifications.unread.splice(index, 1);
+                }
+
+                resolve(true)
+            },
+            onError: () => {
+                reject(false);
+            }
+        })
+    })
 }
 
-const handleNotificationClick = (notification: Notification) => {
-    markAsRead(notification.id)
+const handleNotificationClick = async (notification: Notification) => {
+    await markAsRead(notification.id)
     router.visit(getNotificationHref(notification))
 }
 

@@ -101,4 +101,9 @@ final class Group extends Model implements HasMedia
             ->wherePivot('role', GroupUserRoleEnum::ADMIN->value)
             ->withPivot(['status', 'role', 'group_id', 'owner_id']);
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }

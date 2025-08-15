@@ -11,6 +11,8 @@ import InviteUserToGroupModal from "@/Components/app/InviteUserToGroupModal.vue"
 import {User} from "@/types";
 import UserListItem from "@/Components/app/UserListItem.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
+import {Post} from "@/types/post";
+import PostList from "@/Components/app/PostList.vue";
 
 const props = defineProps<{
     group: {
@@ -21,6 +23,9 @@ const props = defineProps<{
     },
     pending: {
         data: User[]
+    },
+    posts: {
+        data: Post[]
     }
 }>()
 
@@ -257,6 +262,7 @@ const removeUser = (user: User) => {
                     <TabPanels class="mt-2">
                         <TabPanel>
                             <CreatePost :group="group.data"/>
+                            <PostList :posts="posts.data" />
                         </TabPanel>
                         <TabPanel>
                             <div class="grid grid-cols-2 gap-3">

@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Services\GroupService;
@@ -24,6 +25,7 @@ final class GroupController extends Controller
     public function show(Group $group): Response
     {
         $group->load('authUserMembership');
+        $group->load('posts');
 
         if ($group->authUserMembership) {
             $group->setRelation('pivot', $group->authUserMembership);
@@ -34,6 +36,7 @@ final class GroupController extends Controller
 
         return Inertia::render('Group/Show', [
             'group' => GroupResource::make($group),
+            'posts' => PostResource::collection($group->posts),
             'users' => GroupUserResource::collection($group->approvedUsers),
             'pending' => UserResource::collection($pending),
         ]);

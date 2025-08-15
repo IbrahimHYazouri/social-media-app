@@ -24,5 +24,6 @@ export type PageProps<
             count: number
         }
     };
+    allowedAttachmentExtensions: string[];
     ziggy: Config & { location: string };
 };

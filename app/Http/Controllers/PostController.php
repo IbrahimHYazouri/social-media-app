@@ -22,7 +22,7 @@ final class PostController extends Controller
     {
         $this->postService->createPostWithAttachments($request->validated());
 
-        return redirect()->route('dashboard')->with('success', 'Post created');
+        return back()->with('success', 'Post created');
     }
 
     public function update(UpdatePostRequest $request, Post $post): RedirectResponse

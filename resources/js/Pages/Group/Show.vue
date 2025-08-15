@@ -10,6 +10,7 @@ import {Head, useForm} from "@inertiajs/vue3";
 import InviteUserToGroupModal from "@/Components/app/InviteUserToGroupModal.vue";
 import {User} from "@/types";
 import UserListItem from "@/Components/app/UserListItem.vue";
+import CreatePost from "@/Components/app/CreatePost.vue";
 
 const props = defineProps<{
     group: {
@@ -255,7 +256,7 @@ const removeUser = (user: User) => {
 
                     <TabPanels class="mt-2">
                         <TabPanel>
-                            Posts
+                            <CreatePost :group="group.data"/>
                         </TabPanel>
                         <TabPanel>
                             <div class="grid grid-cols-2 gap-3">

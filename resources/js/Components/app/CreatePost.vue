@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import PostModal from "@/Components/app/PostModal.vue";
+import {Group} from "@/types/group";
 
 const showModal = ref(false);
+
+defineProps<{
+    group?: Group
+}>()
 </script>
 
 <template>
@@ -13,7 +18,7 @@ const showModal = ref(false);
             Click here to create new post
         </div>
 
-        <PostModal :show="showModal" @close="showModal = false" />
+        <PostModal :show="showModal" :group="group" @close="showModal = false" />
     </div>
 </template>
 

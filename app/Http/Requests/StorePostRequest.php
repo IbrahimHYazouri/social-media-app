@@ -47,6 +47,7 @@ final class StorePostRequest extends FormRequest
             'attachments.*' => ['file',
                 File::types(self::$extensions)->max(self::$maxFileSize / 1024),
             ],
+            'group_id' => ['nullable', 'integer', 'exists:groups,id'],
         ];
     }
 

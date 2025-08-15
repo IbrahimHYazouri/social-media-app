@@ -18,6 +18,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
  * @property-read int $id
  * @property-read string $body
  * @property-read int $user_id
+ * @property-read int $group_id
  * @property-read int $reaction_count
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
@@ -29,6 +30,7 @@ final class Post extends Model implements HasMedia, Reactable
     protected $fillable = [
         'body',
         'user_id',
+        'group_id',
         'updated_at',
     ];
 

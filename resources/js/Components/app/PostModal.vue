@@ -6,6 +6,7 @@ import {Post} from "@/types/post";
 import {computed, ref, watch} from "vue";
 import {isImage} from "@/helper";
 import {Attachment} from "@/types/attachment";
+import {Group} from "@/types/group";
 
 interface AttachmentFile {
     file: File;
@@ -14,6 +15,7 @@ interface AttachmentFile {
 
 const props = defineProps<{
     post?: Post,
+    group?: Group,
     show: boolean
 }>()
 
@@ -22,17 +24,19 @@ const emit = defineEmits<{
 }>()
 
 const authUser = usePage().props.auth.user;
-const allowedAttachmentExtensions= usePage().props.allowed_attachment_extensions;
+const allowedAttachmentExtensions = usePage().props.allowed_attachment_extensions as string[];
 
 const form = useForm<{
     body: string,
     user_id: number,
+    group_id?: number | null,
     attachments: File[],
     deleted_attachment_ids?: Array<number>,
     _method?: string | null
 }>({
     body: props.post?.body || '',
     user_id: props.post?.user_id || authUser.id,
+    group_id: null,
     attachments: [],
     deleted_attachment_ids: [],
     _method: ''
@@ -45,7 +49,7 @@ const showInvalidAttachmentTypeText = computed(() => {
     for (let attachment of attachments.value) {
         const file = attachment.file;
         let parts = file.name.split('.');
-        let extension = parts.pop().toLowerCase();
+        let extension = parts.pop()?.toLowerCase() || '';
         if (!allowedAttachmentExtensions.includes(extension)) {
             return true;
         }
@@ -110,10 +114,14 @@ const getAttachmentError = (index: number) => {
         return;
     }
 
-    return form.errors[`attachments.${index}`] || null;
+    return form.errors[`attachments.${index}` as keyof typeof form.errors] || null;
 }
 
 const submit = () => {
+    if (props.group) {
+        form.group_id = props.group.id;
+    }
+
     form.attachments = attachments.value.map(attachment => attachment.file);
     if (props.post && props.post.id) {
         form._method = 'PUT';

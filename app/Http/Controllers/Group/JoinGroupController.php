@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Group;
 
 use App\Enums\GroupUserRoleEnum;
 use App\Enums\GroupUserStatusEnum;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\JoinGroupRequest;
 use App\Models\Group;
 use App\Models\GroupUser;

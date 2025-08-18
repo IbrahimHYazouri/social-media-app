@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 final class RemoveUserFromGroupController extends Controller
 {
@@ -23,7 +24,7 @@ final class RemoveUserFromGroupController extends Controller
             ->where('group_id', $group->id)
             ->first();
 
-        $this->authorize('removeMember', [$group, $groupUser->user]);
+        Gate::authorize('removeMember', [$group, $groupUser->user]);
 
         if ($groupUser) {
             $groupUser->delete();

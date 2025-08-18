@@ -51,6 +51,11 @@ final class Post extends Model implements HasMedia, Reactable
         return $this->getMedia('attachments');
     }
 
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('attachments')

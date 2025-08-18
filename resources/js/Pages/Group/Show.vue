@@ -13,6 +13,7 @@ import UserListItem from "@/Components/app/UserListItem.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import {Post} from "@/types/post";
 import PostList from "@/Components/app/PostList.vue";
+import GroupForm from "@/Components/app/GroupForm.vue";
 
 const props = defineProps<{
     group: {
@@ -294,7 +295,7 @@ const removeUser = (user: User) => {
                             Photos
                         </TabPanel>
                         <TabPanel v-if="group.data.can.manage">
-                            Update
+                            <GroupForm :group="group.data" />
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\PostResource;
@@ -12,6 +13,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Services\GroupService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -50,5 +52,14 @@ final class GroupController extends Controller
         $group = $this->groupService->createGroupWithAdmin($data, $userId);
 
         return response(GroupResource::make($group), 201);
+    }
+
+    public function update(UpdateGroupRequest $request, Group $group)
+    {
+        Gate::authorize('update', $group);
+
+        $group->update($request->validated());
+
+        return redirect()->route('groups.show', $group);
     }
 }

@@ -12,7 +12,7 @@ defineProps<{
         <Link
             :href="route('groups.show', group.slug)"
             class="flex items-start gap-1 py-2 px-2">
-            <img src="/img/no_image.png" alt="group-avatar" class="w-[32px] rounded-full"/>
+            <img :src="group.avatar_url || '/img/no_image.png'" alt="group-avatar" class="w-[32px] rounded-full"/>
             <div class="flex-1">
                 <div class="flex items-center justify-between">
                     <h3 class="font-black">{{ group.name }}</h3>

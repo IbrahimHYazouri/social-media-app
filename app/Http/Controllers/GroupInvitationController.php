@@ -14,6 +14,7 @@ use App\Notifications\InvitationAccepted;
 use App\Notifications\InvitationToGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -50,7 +51,7 @@ final class GroupInvitationController extends Controller
 
     public function invite(InviteUserRequest $request, Group $group): RedirectResponse
     {
-        $this->authorize('invite', $group);
+        Gate::authorize('invite', $group);
 
         $invitee = $request->getInvitee();
         optional($request->getExistingPivot())->delete();

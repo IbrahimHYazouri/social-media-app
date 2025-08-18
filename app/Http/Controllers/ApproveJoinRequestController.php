@@ -10,12 +10,13 @@ use App\Models\Group;
 use App\Models\User;
 use App\Notifications\JoinRequestApproved;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 final class ApproveJoinRequestController extends Controller
 {
     public function __invoke(ApproveJoinRequest $request, Group $group): RedirectResponse
     {
-        $this->authorize('approveJoinRequest', $group);
+        Gate::authorize('approveJoinRequest', $group);
 
         $groupUser = $request->getGroupUser();
         $approved = $request->validated()['action'] === 'approve';

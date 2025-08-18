@@ -10,6 +10,7 @@ use App\Models\GroupUser;
 use App\Models\User;
 use App\Notifications\UserRoleChanged;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 final class ChangeUserRoleController extends Controller
@@ -19,7 +20,7 @@ final class ChangeUserRoleController extends Controller
      */
     public function __invoke(Request $request, Group $group)
     {
-        $this->authorize('changeRole', $group);
+        Gate::authorize('changeRole', $group);
 
         $data = $request->validate([
             'user_id' => ['required'],

@@ -33,6 +33,7 @@ final class PostResource extends JsonResource
             'num_of_reactions' => $post->reaction_count,
             'user_has_reacted' => $post->hasReactionFromUser(Auth::id()),
             'attachments' => PostAttachmentResource::collection($post->attachments()),
+            'group' => GroupResource::make($post->group),
             'comments' => CommentResource::collection($comments),
             'num_of_comments' => count($comments),
             'can' => [

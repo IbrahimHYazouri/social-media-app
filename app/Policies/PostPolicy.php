@@ -22,6 +22,23 @@ final class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id;
+        if ($user->id === $post->user_id) {
+            return true;
+        }
+
+        if ($post->group) {
+            $group = $post->group;
+            $author = $post->user;
+
+            if ($group->user_id === $user->id) {
+                return true;
+            }
+
+            if ($group->isAdmin($user) && !$group->isAdmin($author)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

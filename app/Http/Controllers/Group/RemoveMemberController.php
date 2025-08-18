@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Group;
 
+use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\GroupUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-final class RemoveUserFromGroupController extends Controller
+final class RemoveMemberController extends Controller
 {
     /**
      * Handle the incoming request.

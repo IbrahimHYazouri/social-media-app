@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\ApproveJoinRequestController;
-use App\Http\Controllers\ChangeUserRoleController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Group\ApproveJoinRequestController;
+use App\Http\Controllers\Group\ChangeUserRoleController;
+use App\Http\Controllers\Group\GroupInvitationController;
+use App\Http\Controllers\Group\JoinGroupController;
+use App\Http\Controllers\Group\RemoveMemberController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupImageController;
-use App\Http\Controllers\GroupInvitationController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\JoinGroupController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileImageController;
 use App\Http\Controllers\ReactionController;
-use App\Http\Controllers\RemoveUserFromGroupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->middleware(['auth', 'verified'])->name('dashboard');
@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
             Route::post('invite', [GroupInvitationController::class, 'invite'])->name('invite');
             Route::post('approve', ApproveJoinRequestController::class)->name('approve');
             Route::patch('change-role', ChangeUserRoleController::class)->name('change-role');
-            Route::delete('users', RemoveUserFromGroupController::class)->name('users.remove');
+            Route::delete('users', RemoveMemberController::class)->name('users.remove');
         });
 
     Route::get('groups/invitations/accept/{token}', [GroupInvitationController::class, 'show'])->name('groups.invitations.show');

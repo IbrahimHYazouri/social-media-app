@@ -32,12 +32,12 @@ final class GroupController extends Controller
         }
 
         $pending = $group->pendingUsers()->get();
-        $group->load('approvedUsers');
+        $group->load('members');
 
         return Inertia::render('Group/Show', [
             'group' => GroupResource::make($group),
             'posts' => PostResource::collection($group->posts),
-            'users' => GroupUserResource::collection($group->approvedUsers),
+            'users' => GroupUserResource::collection($group->members),
             'pending' => UserResource::collection($pending),
         ]);
     }

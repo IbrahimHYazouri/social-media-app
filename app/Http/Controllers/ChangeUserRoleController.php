@@ -19,6 +19,8 @@ final class ChangeUserRoleController extends Controller
      */
     public function __invoke(Request $request, Group $group)
     {
+        $this->authorize('changeRole', $group);
+
         $data = $request->validate([
             'user_id' => ['required'],
             'role' => ['required', Rule::enum(GroupUserRoleEnum::class)],

@@ -81,7 +81,7 @@ final class Group extends Model implements HasMedia
         return $this->hasOne(GroupUser::class)->where('user_id', Auth::id());
     }
 
-    public function approvedUsers(): BelongsToMany
+    public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_users')
             ->wherePivot('status', GroupUserStatusEnum::APPROVED->value)
@@ -105,5 +105,26 @@ final class Group extends Model implements HasMedia
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function roleFor(User $user)
+    {
+        return $this->members()
+            ->where('user_id', $user->id)
+            ->value('role');
+    }
+
+    public function isOwner(User $user): bool
+    {
+        return $this->user_id === $user->id;
+    }
+
+    public function isAdmin(User $user): bool
+    {
+        if ($this->isOwner($user)) {
+            return true;
+        }
+
+        return $this->roleFor($user) === GroupUserRoleEnum::ADMIN->value;
     }
 }

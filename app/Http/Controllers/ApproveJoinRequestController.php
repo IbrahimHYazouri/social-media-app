@@ -15,6 +15,8 @@ final class ApproveJoinRequestController extends Controller
 {
     public function __invoke(ApproveJoinRequest $request, Group $group): RedirectResponse
     {
+        $this->authorize('approveJoinRequest', $group);
+
         $groupUser = $request->getGroupUser();
         $approved = $request->validated()['action'] === 'approve';
 

@@ -23,6 +23,8 @@ final class RemoveUserFromGroupController extends Controller
             ->where('group_id', $group->id)
             ->first();
 
+        $this->authorize('removeMember', [$group, $groupUser->user]);
+
         if ($groupUser) {
             $groupUser->delete();
         }

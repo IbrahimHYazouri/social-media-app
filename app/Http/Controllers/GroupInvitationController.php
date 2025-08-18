@@ -50,6 +50,8 @@ final class GroupInvitationController extends Controller
 
     public function invite(InviteUserRequest $request, Group $group): RedirectResponse
     {
+        $this->authorize('invite', $group);
+
         $invitee = $request->getInvitee();
         optional($request->getExistingPivot())->delete();
 

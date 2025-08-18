@@ -22,6 +22,23 @@ final class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id;
+        if ($user->id === $comment->user_id) {
+            return true;
+        }
+
+        if ($comment->post->group) {
+            $group = $comment->post->group;
+            $author = $comment->user;
+
+            if ($group->owner_id === $user->id) {
+                return true;
+            }
+
+            if ($group->isAdmin($user) && !$group->isAdmin($author)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

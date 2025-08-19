@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import FollowingListItem from "@/Components/app/FollowingListItem.vue";
 import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
+import {User} from "@/types";
+
+defineProps<{
+    following: User[]
+}>()
 </script>
 
 <template>
@@ -18,13 +23,13 @@ import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
                     </div>
                 </DisclosureButton>
                 <DisclosurePanel>
-                    <FollowingListItem/>
+                    <FollowingListItem :following="following"/>
                 </DisclosurePanel>
             </Disclosure>
         </div>
         <div class="h-full overflow-hidden flex-col hidden lg:flex">
             <h2 class="text-xl font-bold">My Followings</h2>
-            <FollowingListItem/>
+            <FollowingListItem :following="following"/>
         </div>
     </div>
 </template>

@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -65,10 +66,13 @@ final class HomeController extends Controller
             ->orderBy('name', 'desc')
             ->get();
 
+        $user->load('following');
+
         return Inertia::render('Home', [
             'feed' => PostResource::collection($posts),
             'groups' => GroupResource::collection($groups),
             'allowed_attachment_extensions' => StorePostRequest::$extensions,
+            'following' => UserResource::collection($user->following)
         ]);
     }
 }

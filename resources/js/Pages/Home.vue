@@ -7,6 +7,7 @@ import PostList from "@/Components/app/PostList.vue";
 import FollowingList from "@/Components/app/FollowingList.vue";
 import {Post} from "@/types/post";
 import {Group} from "@/types/group";
+import {User} from "@/types";
 
 const props = defineProps<{
     feed: {
@@ -14,6 +15,9 @@ const props = defineProps<{
     },
     groups: {
         data: Group[]
+    },
+    following: {
+        data: User[]
     }
 }>()
 </script>
@@ -27,7 +31,7 @@ const props = defineProps<{
                 <GroupList :groups="groups.data"/>
             </div>
             <div class="lg:col-span-3 lg:order-3 h-full overflow-hidden">
-<!--                <FollowingList />-->
+                <FollowingList :following="following.data"/>
             </div>
             <div class="lg:col-span-6 lg:order-2 h-full overflow-hidden flex flex-col">
                 <CreatePost />

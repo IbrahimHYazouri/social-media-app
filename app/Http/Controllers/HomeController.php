@@ -27,6 +27,9 @@ final class HomeController extends Controller
         $user = Auth::user();
         $userId = Auth::id();
 
+        $followingIds = $user->following()->select('users.id')->pluck('id');
+        $groupIds = $user->groups()->pluck('groups.id');
+
         $posts = Post::with([
             'user',
             'reactions' => function ($query) use ($userId) {
@@ -50,6 +53,8 @@ final class HomeController extends Controller
                     ]);
             },
         ])
+            ->whereIn('user_id', $followingIds)
+            ->orWhereIn('group_id', $groupIds)
             ->latest()
             ->paginate(20);
 

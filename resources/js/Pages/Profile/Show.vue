@@ -8,6 +8,8 @@ import TabItem from "@/Components/TabItem.vue";
 import {computed, ref} from "vue";
 import Edit from "@/Pages/Profile/Edit.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import CreatePost from "@/Components/app/CreatePost.vue";
+import PostList from "@/Components/app/PostList.vue";
 
 const props = defineProps<{
     user: User
@@ -189,9 +191,11 @@ const unfollow = () => {
                         </TabList>
                         <TabPanels class="mt-2">
                             <TabPanel>
-                                <div>
-                                    Posts
-                                </div>
+                                <CreatePost />
+                                <PostList
+                                    v-if="user.posts"
+                                    :posts="user.posts"
+                                />
                             </TabPanel>
                             <TabPanel>
                                 <div>

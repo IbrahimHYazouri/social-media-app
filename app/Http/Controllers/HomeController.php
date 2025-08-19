@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,6 +27,9 @@ final class HomeController extends Controller
          */
         $user = Auth::user();
         $userId = Auth::id();
+
+        $followingIds = $user->following()->select('users.id')->pluck('id');
+        $groupIds = $user->groups()->pluck('groups.id');
 
         $posts = Post::with([
             'user',
@@ -50,6 +54,8 @@ final class HomeController extends Controller
                     ]);
             },
         ])
+            ->whereIn('user_id', $followingIds)
+            ->orWhereIn('group_id', $groupIds)
             ->latest()
             ->paginate(20);
 
@@ -60,10 +66,13 @@ final class HomeController extends Controller
             ->orderBy('name', 'desc')
             ->get();
 
+        $user->load('following');
+
         return Inertia::render('Home', [
             'feed' => PostResource::collection($posts),
             'groups' => GroupResource::collection($groups),
             'allowed_attachment_extensions' => StorePostRequest::$extensions,
+            'following' => UserResource::collection($user->following)
         ]);
     }
 }

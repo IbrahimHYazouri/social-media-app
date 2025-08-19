@@ -2,8 +2,13 @@
 import {ref} from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import UserListItem from "@/Components/app/UserListItem.vue";
+import {User} from "@/types";
 
-const searchKeyword = ref('')
+const searchKeyword = ref('');
+
+defineProps<{
+    following: User[]
+}>()
 </script>
 
 <template>
@@ -13,10 +18,11 @@ const searchKeyword = ref('')
             You don't have friends yet.
         </div>
         <div v-else>
-            <UserListItem />
-            <UserListItem />
-            <UserListItem />
-            <UserListItem />
+            <UserListItem
+                v-for="user in following" :user="user"
+                :show-approval-actions="false"
+                :show-role-change-actions="false"
+            />
         </div>
     </div>
 </template>

@@ -7,6 +7,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Components/TabItem.vue";
 import {computed, ref} from "vue";
 import Edit from "@/Pages/Profile/Edit.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps<{
     user: User
@@ -68,6 +69,12 @@ const submit = () => {
             reset()
         }
     })
+}
+
+const follow = () => {
+    const form = useForm({});
+
+    form.post(route('follows.store', props.user.id))
 }
 </script>
 
@@ -143,6 +150,12 @@ const submit = () => {
                         <div>
                             <h2 class="font-bold text-lg">{{ user.name }}</h2>
                             <p class="text-xs text-gray-500">50 follower(s)</p>
+                        </div>
+
+                        <div v-if="!isMyProfile">
+                            <PrimaryButton @click="follow">
+                                Follow User
+                            </PrimaryButton>
                         </div>
                     </div>
                 </div>

@@ -34,7 +34,7 @@ final class PostPolicy
                 return true;
             }
 
-            if ($group->isAdmin($user) && !$group->isAdmin($author)) {
+            if ($group->isAdmin($user) && ! $group->isAdmin($author)) {
                 return true;
             }
         }

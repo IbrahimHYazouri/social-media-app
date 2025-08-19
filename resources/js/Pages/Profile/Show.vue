@@ -76,6 +76,12 @@ const follow = () => {
 
     form.post(route('follows.store', props.user.id))
 }
+
+const unfollow = () => {
+    const form = useForm({});
+
+    form.delete(route('follows.destroy', props.user.id))
+}
 </script>
 
 <template>
@@ -149,12 +155,15 @@ const follow = () => {
                     <div class="flex justify-between items-center flex-1 p-4">
                         <div>
                             <h2 class="font-bold text-lg">{{ user.name }}</h2>
-                            <p class="text-xs text-gray-500">50 follower(s)</p>
+                            <p class="text-xs text-gray-500">{{user.followers_count}} follower(s)</p>
                         </div>
 
                         <div v-if="!isMyProfile">
-                            <PrimaryButton @click="follow">
-                                Follow User
+                            <PrimaryButton v-if="!user.is_following" @click="follow">
+                                Follow
+                            </PrimaryButton>
+                            <PrimaryButton v-if="user.is_following" @click="unfollow">
+                                Unfollow
                             </PrimaryButton>
                         </div>
                     </div>

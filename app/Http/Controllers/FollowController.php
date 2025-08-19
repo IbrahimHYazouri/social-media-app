@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\FollowerNotification;
 use Illuminate\Support\Facades\Auth;
 
 final class FollowController extends Controller
@@ -17,6 +18,8 @@ final class FollowController extends Controller
         $authUser = Auth::user();
 
         $authUser->following()->syncWithoutDetaching($user->id);
+
+        $user->notify(new FollowerNotification($authUser));
 
         return back();
     }

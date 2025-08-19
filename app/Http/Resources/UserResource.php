@@ -40,6 +40,9 @@ final class UserResource extends JsonResource
             'posts' => PostResource::collection(
                 $this->whenLoaded('posts'),
             ),
+            'attachments' => PostAttachmentResource::collection(
+                $this->whenLoaded('postAttachments'),
+            ),
             'cover_url' => $user->getCoverUrlAttribute(),
             'avatar_url' => $user->getAvatarThumbUrlAttribute(),
             'followers_count' => $user->followers()->count(),

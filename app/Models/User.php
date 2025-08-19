@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -94,6 +95,18 @@ final class User extends Authenticatable implements HasMedia
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function postAttachments()
+    {
+        return $this->hasManyThrough(
+            Media::class,
+            Post::class,
+            'user_id',
+            'model_id',
+            'id',
+            'id'
+        )->where('model_type', Post::class);
     }
 
     public function groups(): BelongsToMany

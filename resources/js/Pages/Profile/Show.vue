@@ -10,6 +10,7 @@ import Edit from "@/Pages/Profile/Edit.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
 import PostList from "@/Components/app/PostList.vue";
+import AttachmentTab from "@/Components/app/AttachmentTab.vue";
 
 const props = defineProps<{
     user: User
@@ -208,9 +209,7 @@ const unfollow = () => {
                                 </div>
                             </TabPanel>
                             <TabPanel>
-                                <div>
-                                    Photos
-                                </div>
+                                <AttachmentTab v-if="user.attachments" :attachments="user.attachments" />
                             </TabPanel>
                             <TabPanel>
                                 <Edit />

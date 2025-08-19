@@ -24,7 +24,8 @@ const emit = defineEmits<{
 }>()
 
 const authUser = usePage().props.auth.user;
-const allowedAttachmentExtensions = usePage().props.allowed_attachment_extensions as string[];
+const allowedAttachmentExtensions = (usePage().props.allowed_attachment_extensions as string[]) ?? [];
+
 
 const form = useForm<{
     body: string,

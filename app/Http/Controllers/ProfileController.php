@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -19,9 +20,11 @@ final class ProfileController extends Controller
     public function show(User $user): Response
     {
         $user->load('posts');
+        $user->load('postAttachments');
 
         return Inertia::render('Profile/Show', [
             'user' => UserResource::make($user),
+            'allowed_attachment_extensions' => StorePostRequest::$extensions,
         ]);
     }
 

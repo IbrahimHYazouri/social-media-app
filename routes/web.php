@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\Group\ApproveJoinRequestController;
 use App\Http\Controllers\Group\ChangeUserRoleController;
 use App\Http\Controllers\Group\GroupInvitationController;
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/images/{user}', ProfileImageController::class)->name('profile.images.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follows.store');
+    Route::delete('/users/{user}/follow', [FollowController::class, 'destroy'])->name('follows.destroy');
 
     Route::get('/attachments/{media}/download', [PostAttachmentController::class, 'download'])->name('attachments.download');
 

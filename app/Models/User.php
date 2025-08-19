@@ -102,6 +102,21 @@ final class User extends Authenticatable implements HasMedia
             ->withPivot(['status', 'role', 'owner_id']);
     }
 
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'follows', 'follower_id', 'followee_id');
+    }
+
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'follows', 'followee_id', 'follower_id');
+    }
+
+    public function isFollowing(self $user): bool
+    {
+        return $this->following()->where('followee_id', $user->id)->exists();
+    }
+
     /**
      * Get the attributes that should be cast.
      *

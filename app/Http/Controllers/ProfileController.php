@@ -18,6 +18,8 @@ final class ProfileController extends Controller
 {
     public function show(User $user): Response
     {
+        $user->load('posts');
+
         return Inertia::render('Profile/Show', [
             'user' => UserResource::make($user),
         ]);

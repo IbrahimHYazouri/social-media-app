@@ -1,5 +1,6 @@
 import { Config } from 'ziggy-js';
 import {Notification} from "@/types/notification";
+import {Post} from "@/types/post";
 
 export interface User {
     id: number;
@@ -12,6 +13,7 @@ export interface User {
     avatar_url ?: string;
     status ?: string;
     role ?: string;
+    posts ?: Post[];
     followers_count: number;
     following_count: number;
     is_following: boolean;

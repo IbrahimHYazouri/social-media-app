@@ -37,6 +37,9 @@ final class UserResource extends JsonResource
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
             'username' => $user->username,
+            'posts' => PostResource::collection(
+                $this->whenLoaded('posts'),
+            ),
             'cover_url' => $user->getCoverUrlAttribute(),
             'avatar_url' => $user->getAvatarThumbUrlAttribute(),
             'followers_count' => $user->followers()->count(),

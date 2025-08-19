@@ -7,6 +7,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TabItem from "@/Components/TabItem.vue";
 import {computed, ref} from "vue";
 import Edit from "@/Pages/Profile/Edit.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const props = defineProps<{
     user: User
@@ -68,6 +69,18 @@ const submit = () => {
             reset()
         }
     })
+}
+
+const follow = () => {
+    const form = useForm({});
+
+    form.post(route('follows.store', props.user.id))
+}
+
+const unfollow = () => {
+    const form = useForm({});
+
+    form.delete(route('follows.destroy', props.user.id))
 }
 </script>
 
@@ -142,7 +155,16 @@ const submit = () => {
                     <div class="flex justify-between items-center flex-1 p-4">
                         <div>
                             <h2 class="font-bold text-lg">{{ user.name }}</h2>
-                            <p class="text-xs text-gray-500">50 follower(s)</p>
+                            <p class="text-xs text-gray-500">{{user.followers_count}} follower(s)</p>
+                        </div>
+
+                        <div v-if="!isMyProfile">
+                            <PrimaryButton v-if="!user.is_following" @click="follow">
+                                Follow
+                            </PrimaryButton>
+                            <PrimaryButton v-if="user.is_following" @click="unfollow">
+                                Unfollow
+                            </PrimaryButton>
                         </div>
                     </div>
                 </div>

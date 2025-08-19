@@ -28,7 +28,7 @@ const submit = () => {
 
 <template>
     <form class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800 space-y-4" @submit.prevent="submit">
-        <div class="">
+        <div class="mb-3 dark:text-gray-100">
             <label>Group Name</label>
             <TextInput
                 type="text"

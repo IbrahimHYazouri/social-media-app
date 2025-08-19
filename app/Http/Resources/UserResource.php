@@ -7,6 +7,7 @@ namespace App\Http\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 final class UserResource extends JsonResource
 {
@@ -23,6 +24,10 @@ final class UserResource extends JsonResource
          * @var User $user
          */
         $user = $this->resource;
+        /**
+         * @var User $authUser
+         */
+        $authUser = Auth::user();
 
         return [
             'id' => $user->id,
@@ -34,6 +39,9 @@ final class UserResource extends JsonResource
             'username' => $user->username,
             'cover_url' => $user->getCoverUrlAttribute(),
             'avatar_url' => $user->getAvatarThumbUrlAttribute(),
+            'followers_count' => $user->followers()->count(),
+            'followings_count' => $user->following()->count(),
+            'is_following' => $authUser->isFollowing($user),
         ];
     }
 }

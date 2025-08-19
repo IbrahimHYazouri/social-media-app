@@ -12,6 +12,9 @@ export interface User {
     avatar_url ?: string;
     status ?: string;
     role ?: string;
+    followers_count: number;
+    following_count: number;
+    is_following: boolean;
 }
 
 export type PageProps<

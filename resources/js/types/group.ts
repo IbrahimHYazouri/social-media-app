@@ -1,3 +1,5 @@
+import {Attachment} from "@/types/attachment";
+
 export interface Group {
     id: number;
     name: string;
@@ -11,6 +13,7 @@ export interface Group {
     cover_url ?: string;
     created_at: string;
     updated_at: string;
+    attachments ?: Attachment[],
     can: {
         manage: boolean,
         participate: boolean,

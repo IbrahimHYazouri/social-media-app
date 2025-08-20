@@ -192,7 +192,7 @@ const unfollow = () => {
                         </TabList>
                         <TabPanels class="mt-2">
                             <TabPanel>
-                                <CreatePost />
+                                <CreatePost v-if="isMyProfile" />
                                 <PostList
                                     v-if="user.posts"
                                     :posts="user.posts"

@@ -14,6 +14,7 @@ import CreatePost from "@/Components/app/CreatePost.vue";
 import {Post} from "@/types/post";
 import PostList from "@/Components/app/PostList.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
+import AttachmentTab from "@/Components/app/AttachmentTab.vue";
 
 const props = defineProps<{
     group: {
@@ -262,7 +263,7 @@ const removeUser = (user: User) => {
 
                     <TabPanels class="mt-2">
                         <TabPanel>
-                            <CreatePost :group="group.data"/>
+                            <CreatePost v-if="group.data.can.manage || group.data.can.participate" :group="group.data"/>
                             <PostList :posts="posts.data" />
                         </TabPanel>
                         <TabPanel>
@@ -292,7 +293,10 @@ const removeUser = (user: User) => {
                             </div>
                         </TabPanel>
                         <TabPanel>
-                            Photos
+                            <AttachmentTab
+                                v-if="group.data.attachments"
+                                :attachments="group.data.attachments"
+                            />
                         </TabPanel>
                         <TabPanel v-if="group.data.can.manage">
                             <GroupForm :group="group.data" />

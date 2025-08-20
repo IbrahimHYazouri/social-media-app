@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -105,6 +106,18 @@ final class Group extends Model implements HasMedia
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function postAttachments()
+    {
+        return $this->hasManyThrough(
+            Media::class,
+            Post::class,
+            'group_id',
+            'model_id',
+            'id',
+            'id'
+        )->where('model_type', Post::class);
     }
 
     public function roleFor(User $user)

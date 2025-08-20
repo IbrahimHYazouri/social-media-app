@@ -18,6 +18,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileImageController;
 use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->middleware(['auth', 'verified'])->name('dashboard');
@@ -62,6 +63,8 @@ Route::middleware('auth')->group(function () {
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+
+    Route::get('/search/{search?}', SearchController::class)->name('search');
 });
 
 require __DIR__.'/auth.php';

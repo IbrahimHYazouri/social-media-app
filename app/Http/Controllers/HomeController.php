@@ -72,7 +72,7 @@ final class HomeController extends Controller
             'feed' => PostResource::collection($posts),
             'groups' => GroupResource::collection($groups),
             'allowed_attachment_extensions' => StorePostRequest::$extensions,
-            'following' => UserResource::collection($user->following)
+            'following' => UserResource::collection($user->following),
         ]);
     }
 }

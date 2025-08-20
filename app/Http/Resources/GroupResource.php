@@ -37,6 +37,9 @@ final class GroupResource extends JsonResource
             'user_id' => $group->user_id,
             'role' => $group->pivot?->role,
             'status' => $group->pivot?->status,
+            'attachments' => PostAttachmentResource::collection(
+                $this->whenLoaded('postAttachments'),
+            ),
             'cover_url' => $group->getCoverUrlAttribute(),
             'avatar_url' => $group->getAvatarThumbUrlAttribute(),
             'created_at' => $group->created_at,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
@@ -27,6 +28,7 @@ final class GroupController extends Controller
     public function show(Group $group): Response
     {
         $group->load('authUserMembership');
+        $group->load('postAttachments');
         $group->load('posts');
 
         if ($group->authUserMembership) {
@@ -41,6 +43,7 @@ final class GroupController extends Controller
             'posts' => PostResource::collection($group->posts),
             'users' => GroupUserResource::collection($group->members),
             'pending' => UserResource::collection($pending),
+            'allowed_attachment_extensions' => StorePostRequest::$extensions,
         ]);
     }
 

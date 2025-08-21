@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -38,6 +38,7 @@ const keywords = ref("");
 const searchResult = ref<SearchResult | null>(null);
 const isSearching = ref(false)
 const showSearchResults = ref(false)
+const searchContainer = ref<HTMLElement | null>(null);
 
 function debounce<T extends (...args: any[]) => void>(
     func: T,
@@ -53,7 +54,6 @@ function debounce<T extends (...args: any[]) => void>(
         }, delay);
     };
 }
-
 
 const search = async () => {
     if (!keywords.value.trim()) {
@@ -83,6 +83,20 @@ const search = async () => {
 }
 
 const debounceSearch = debounce(search, 500)
+
+const handleClickOutside = (event: MouseEvent) => {
+    if (searchContainer.value && !searchContainer.value.contains(event.target as Node)) {
+        showSearchResults.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", handleClickOutside);
+});
 
 useEcho(
     `App.Models.User.${authUser.id}`,
@@ -156,11 +170,9 @@ const getNotificationHref = (notification: Notification) => {
 <template>
     <div class="min-h-screen overflow-hidden flex flex-col bg-gray-100 dark:bg-gray-800">
         <nav class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-            <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between gap-2 h-16">
                     <div class="flex mr-2">
-                        <!-- Logo -->
                         <div class="shrink-0 flex items-center">
                             <Link :href="route('dashboard')">
                                 <ApplicationLogo
@@ -172,7 +184,7 @@ const getNotificationHref = (notification: Notification) => {
                     </div>
 
                     <div class="flex items-center gap-3 flex-1 relative">
-                        <div class="relative w-full">
+                        <div ref="searchContainer" class="relative w-full">
                             <TextInput v-model="keywords" @keydown="debounceSearch" placeholder="Search on the website" class="w-full"/>
 
                             <div

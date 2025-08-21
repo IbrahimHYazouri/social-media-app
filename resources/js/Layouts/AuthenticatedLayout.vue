@@ -11,6 +11,10 @@ import {BellIcon} from '@heroicons/vue/24/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import {Notification} from "@/types/notification";
 import { useEcho } from "@laravel/echo-vue";
+import axios from "axios";
+import {User} from "@/types";
+import {Post} from "@/types/post";
+import {Group} from "@/types/group";
 
 interface LiveNotification {
     id: string;
@@ -20,10 +24,65 @@ interface LiveNotification {
     target_params: Record<string, string>
 }
 
+interface SearchResult {
+    search: string;
+    users: User[],
+    posts: Post[],
+    groups: Group[]
+}
+
 const showingNavigationDropdown = ref(false);
 const authUser = usePage().props.auth.user;
 const notifications = usePage().props.auth.notifications
-const keywords = ref("")
+const keywords = ref("");
+const searchResult = ref<SearchResult | null>(null);
+const isSearching = ref(false)
+const showSearchResults = ref(false)
+
+function debounce<T extends (...args: any[]) => void>(
+    func: T,
+    delay: number
+): (...args: Parameters<T>) => void {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(context, args);
+        }, delay);
+    };
+}
+
+
+const search = async () => {
+    if (!keywords.value.trim()) {
+        searchResult.value = null;
+        showSearchResults.value = false;
+        return;
+    }
+
+    isSearching.value = true;
+
+    try {
+
+        const { data } = await axios.get('/search', {
+            params: {
+                search: keywords.value
+            }
+        })
+
+        searchResult.value = data;
+        showSearchResults.value = true;
+    } catch (error) {
+        console.error('Search error:', error);
+        searchResult.value = null;
+    } finally {
+        isSearching.value = false;
+    }
+}
+
+const debounceSearch = debounce(search, 500)
 
 useEcho(
     `App.Models.User.${authUser.id}`,
@@ -112,8 +171,77 @@ const getNotificationHref = (notification: Notification) => {
 
                     </div>
 
-                    <div class="flex items-center gap-3 flex-1">
-                        <TextInput v-model="keywords" placeholder="Search on the website" class="w-full"/>
+                    <div class="flex items-center gap-3 flex-1 relative">
+                        <div class="relative w-full">
+                            <TextInput v-model="keywords" @keydown="debounceSearch" placeholder="Search on the website" class="w-full"/>
+
+                            <div
+                                v-if="isSearching"
+                                class="absolute right-3 top-2.5 h-5 w-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"
+                            ></div>
+
+                            <div v-if="showSearchResults && searchResult"
+                                 class="absolute mt-2 w-full rounded-md border border-gray-200 bg-white shadow-lg"
+                            >
+                                <!-- Users -->
+                                <div v-if="searchResult.users.length" class="p-3 border-b border-gray-200">
+                                    <h3 class="mb-2 text-sm font-semibold text-gray-600">Users</h3>
+                                    <ul>
+                                        <li
+                                            v-for="user in searchResult.users"
+                                            :key="user.id"
+                                            class="cursor-pointer px-2 py-1 hover:bg-gray-100"
+                                        >
+                                            {{ user.name }} <span class="text-gray-500">@{{ user.username }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Users /-->
+
+                                <!-- Groups -->
+                                <div v-if="searchResult.groups.length" class="p-3 border-b border-gray-200">
+                                    <h3 class="mb-2 text-sm font-semibold text-gray-600">Groups</h3>
+                                    <ul>
+                                        <li
+                                            v-for="group in searchResult.groups"
+                                            :key="group.id"
+                                            class="cursor-pointer px-2 py-1 hover:bg-gray-100"
+                                        >
+                                            {{ group.name }}
+                                            <p class="text-xs text-gray-500">{{ group.about }}</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Groups /-->
+
+                                <!-- Posts -->
+                                <div v-if="searchResult.posts.length" class="p-3">
+                                    <h3 class="mb-2 text-sm font-semibold text-gray-600">Posts</h3>
+                                    <ul>
+                                        <li
+                                            v-for="post in searchResult.posts"
+                                            :key="post.id"
+                                            class="cursor-pointer px-2 py-1 hover:bg-gray-100"
+                                        >
+                                            {{ post.body?.slice(0, 80) }}...
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- Posts /-->
+
+                                <!-- Empty state -->
+                                <div
+                                    v-if="
+                                      !searchResult.users.length &&
+                                      !searchResult.groups.length &&
+                                      !searchResult.posts.length
+                                    "
+                                    class="p-3 text-center text-gray-500"
+                                >
+                                    No results found
+                                </div>
+                            </div>
+                        </div>
 
                         <Popover class="relative">
                             <PopoverButton class="relative p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">

@@ -15,8 +15,11 @@ export interface Post {
     comments: Comment[];
     group?: Group;
     attachments: Attachment[];
+    isPinned: boolean;
     can: {
         update: boolean;
         delete: boolean;
+        pin: boolean;
+        pinToGroup: boolean;
     };
 }

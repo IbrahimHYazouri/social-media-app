@@ -13,6 +13,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupImageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PinPostController;
 use App\Http\Controllers\PostAttachmentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/attachments/{media}/download', [PostAttachmentController::class, 'download'])->name('attachments.download');
 
     Route::resource('posts', PostController::class);
+    Route::post('/posts/{post}/pin', PinPostController::class)->name('posts.pin');
     Route::resource('posts.comments', CommentController::class)
         ->only(['store'])
         ->shallow();

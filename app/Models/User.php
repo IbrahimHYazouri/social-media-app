@@ -21,6 +21,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read int $id
  * @property-read string $name
  * @property-read string $email
+ * @property-read int $pinned_post_id
  * @property-read DateTimeInterface|null $email_verified_at
  * @property-read string $username
  * @property-read string $password
@@ -43,6 +44,7 @@ final class User extends Authenticatable implements HasMedia
         'username',
         'email',
         'password',
+        'pinned_post_id',
     ];
 
     /**

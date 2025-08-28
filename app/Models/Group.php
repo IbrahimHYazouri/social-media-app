@@ -24,6 +24,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read bool $auto_approval
  * @property-read string $about
  * @property-read int $user_id
+ * @property-read int $pinned_post_id
  * @property-read DateTimeInterface $created_at
  * @property-read DateTimeInterface $updated_at
  */
@@ -32,7 +33,7 @@ final class Group extends Model implements HasMedia
     use HasSlug, InteractsWithMedia;
 
     protected $fillable = [
-        'name', 'user_id', 'auto_approval', 'about',
+        'name', 'user_id', 'auto_approval', 'about', 'pinned_post_id',
     ];
 
     public function getSlugOptions(): SlugOptions

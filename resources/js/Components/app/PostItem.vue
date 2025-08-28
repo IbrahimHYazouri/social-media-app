@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import {ChatBubbleLeftRightIcon, HandThumbUpIcon} from '@heroicons/vue/24/outline'
+import {ChatBubbleLeftRightIcon, HandThumbUpIcon, MapPinIcon} from '@heroicons/vue/24/outline'
 import {Post} from "@/types/post";
 import PostHeader from "@/Components/app/PostHeader.vue";
 import EditDeleteDropdown from "@/Components/app/EditDeleteDropdown.vue";
@@ -8,6 +8,7 @@ import PostAttachments from "@/Components/app/PostAttachments.vue";
 import {ref} from "vue";
 import axios from "axios";
 import CommentList from "@/Components/app/CommentList.vue";
+import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps<{
     post: Post
@@ -39,6 +40,14 @@ const toggleReaction = () => {
         loading.value = false;
     })
 }
+
+const pinUnpinPost = () => {
+    const form = useForm({
+        'scope': props.post.group ? 'group' : 'user'
+    });
+
+    form.post(route('posts.pin', props.post.id))
+}
 </script>
 
 <template>
@@ -46,10 +55,17 @@ const toggleReaction = () => {
         <div class="flex items-center justify-between mb-3">
             <PostHeader :post="post"/>
             <div class="flex items-center">
+                <div v-if="post.isPinned" class="flex items-center text-xs gap-1">
+                    <MapPinIcon
+                        class="size-3"
+                    />
+                    Pinned
+                </div>
                 <EditDeleteDropdown
                     :post="post"
                     @update="$emit('update', post)"
                     @delete="$emit('destroy', post)"
+                    @pin="pinUnpinPost(post)"
                 />
             </div>
         </div>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {Post} from "@/types/post";
 import {EllipsisVerticalIcon, PencilIcon, TrashIcon} from "@heroicons/vue/20/solid/index.js";
+import {MapPinIcon} from "@heroicons/vue/24/outline";
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
 import {computed} from "vue";
 import {Comment} from "@/types/comment";
@@ -12,11 +13,13 @@ const props = defineProps<{
 
 defineEmits<{
     (e: 'update'): void,
-    (e: 'delete'): void
+    (e: 'delete'): void,
+    (e: 'pin'): void
 }>()
 
 const canUpdate = computed(() => props.post?.can.update ?? props.comment?.can.update);
 const canDelete = computed(() => props.post?.can.delete ?? props.comment?.can.delete);
+const canPin = computed(() => props.post?.can.pin ?? props.post?.can.pinToGroup)
 </script>
 
 <template>
@@ -72,6 +75,18 @@ const canDelete = computed(() => props.post?.can.delete ?? props.comment?.can.de
                                 aria-hidden="true"
                             />
                             Delete
+                        </button>
+                    </MenuItem>
+                    <MenuItem v-if="canPin" v-slot="{ active }">
+                        <button
+                            @click="$emit('pin')"
+                            :class="[
+                              active ? 'bg-indigo-500 text-white' : 'text-gray-900',
+                              'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                            ]"
+                        >
+                            <MapPinIcon class="mr-2 size-5"/>
+                            {{ post.isPinned ? 'Unpin' : 'Pin' }}
                         </button>
                     </MenuItem>
                 </div>

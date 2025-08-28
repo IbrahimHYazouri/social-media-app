@@ -24,6 +24,10 @@ final class PostResource extends JsonResource
          */
         $post = $this->resource;
         $comments = $this->comments;
+        $user = Auth::user();
+
+        $isPinnedByUser = $user->pinned_post_id && $user->pinned_post_id === $post->id;
+        $isPinnedByGroup = $post->group && $post->group->pinned_post_id && $post->group->pinned_post_id === $post->id;
 
         return [
             'id' => $post->id,
@@ -36,9 +40,12 @@ final class PostResource extends JsonResource
             'group' => GroupResource::make($post->group),
             'comments' => CommentResource::collection($comments),
             'num_of_comments' => count($comments),
+            'isPinned' => $isPinnedByUser || $isPinnedByGroup,
             'can' => [
                 'update' => Gate::allows('update', $post),
                 'delete' => Gate::allows('delete', $post),
+                'pin' => Gate::allows('pin', $post),
+                'pinToGroup' => Gate::allows('pinToGroup', $post),
             ],
         ];
     }

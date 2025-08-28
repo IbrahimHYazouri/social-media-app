@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\Group;
 use App\Models\Post;
 use App\Models\User;
 
@@ -40,5 +41,27 @@ final class PostPolicy
         }
 
         return false;
+    }
+
+    public function pintToGroup(?User $user, Post $post): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        /**
+         * @var Group $group
+         */
+        $group = $post->group;
+        if (! $group) {
+            return false;
+        }
+
+        return $group->isAdmin($user);
+    }
+
+    public function pin(?User $user): bool
+    {
+        return $user !== null;
     }
 }

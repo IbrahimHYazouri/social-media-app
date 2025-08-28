@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
@@ -9,9 +11,8 @@ use App\Models\Group;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-class SearchController extends Controller
+final class SearchController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -25,18 +26,18 @@ class SearchController extends Controller
         }
 
         $users = User::query()
-            ->where('name', 'like', '%' . $request->search . '%')
-            ->orWhere('username', 'like', '%' . $request->search . '%')
+            ->where('name', 'like', '%'.$request->search.'%')
+            ->orWhere('username', 'like', '%'.$request->search.'%')
             ->latest()
             ->paginate(7);
 
         $posts = Post::query()
-            ->where('body', 'like', '%' . $request->search . '%')
+            ->where('body', 'like', '%'.$request->search.'%')
             ->latest()
             ->paginate(7);
 
         $groups = Group::query()
-            ->where('name', 'like', '%' . $request->search . '%')
+            ->where('name', 'like', '%'.$request->search.'%')
             ->latest()
             ->paginate(7);
 
